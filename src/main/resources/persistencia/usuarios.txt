@@ -1,3 +1,0 @@
-admin@@admin@@admin
-Usuario@@usuario@@usuario
-Usuario@@usuario2@@usuario2
