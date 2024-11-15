@@ -104,4 +104,7 @@ public class ListaEnlazada<T> {
         }
         System.out.println("null");
     }
+
+    public void insertar(T tarea) {
+    }
 }
