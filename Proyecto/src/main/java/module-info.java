@@ -4,7 +4,8 @@ module org.example.proyecto {
 
     requires org.controlsfx.controls;
     requires net.synedra.validatorfx;
+    requires org.json;
+    requires okhttp3;
 
     opens org.example.proyecto to javafx.fxml;
-    exports org.example.proyecto;
 }
