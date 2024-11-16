@@ -1,8 +1,7 @@
-package edu.co.uniquindio.Modelo;
+package edu.co.uniquindio.Modelo.Principales;
 
+import edu.co.uniquindio.Modelo.EstructuraDeDatos.ListaEnlazada;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Clase que representa una tarea con posibles subtareas.
@@ -12,23 +11,27 @@ public class Tarea implements Cloneable {
     private boolean esObligatoria;    // Si la tarea es obligatoria
     private int tiempoEstimado;       // Duración en minutos
     private LocalDateTime fechaCreacion; // Fecha y hora de creación
-    private List<Tarea> listaSubtareas; // Lista de subtareas
+    private ListaEnlazada<Tarea> listaSubtareas; // Lista de subtareas
     private boolean estaCompletada;  // Indica si la tarea está completada
 
     /**
      * Constructor de la tarea.
+     * @param descripcionTarea La descripción de la tarea
+     * @param tiempoEstimado El tiempo estimado en minutos
+     * @param esObligatoria Indica si la tarea es obligatoria
      */
     public Tarea(String descripcionTarea, int tiempoEstimado, boolean esObligatoria) {
         this.descripcionTarea = descripcionTarea;
         this.tiempoEstimado = tiempoEstimado;
         this.esObligatoria = esObligatoria;
         this.fechaCreacion = LocalDateTime.now();  // Fecha actual
-        this.listaSubtareas = new ArrayList<>();
+        this.listaSubtareas = new ListaEnlazada<>();
         this.estaCompletada = false;  // Inicialmente no está completada
     }
 
     /**
      * Constructor de copia para crear una nueva tarea a partir de otra existente.
+     * @param otraTarea La tarea a copiar
      */
     public Tarea(Tarea otraTarea) {
         this.descripcionTarea = otraTarea.descripcionTarea;
@@ -41,23 +44,29 @@ public class Tarea implements Cloneable {
                 otraTarea.fechaCreacion.getHour(),
                 otraTarea.fechaCreacion.getMinute()
         );
-        this.listaSubtareas = new ArrayList<>();
+        this.listaSubtareas = new ListaEnlazada<>();
         this.estaCompletada = otraTarea.estaCompletada;
         // Clona las subtareas de la tarea original
-        for (Tarea subtarea : otraTarea.obtenerSubtareas()) {
-            this.listaSubtareas.add(new Tarea(subtarea));
+        for (int i = 0; i < otraTarea.obtenerSubtareas().getTamanio(); i++) {
+            this.listaSubtareas.insertar(new Tarea(otraTarea.obtenerSubtareas().getElementoEnPosicion(i)));
         }
     }
 
     /**
-     * Obtiene una copia de la lista de subtareas.
+     * Obtiene la lista de subtareas.
+     * @return Lista enlazada con las subtareas
      */
-    public List<Tarea> obtenerSubtareas() {
-        return new ArrayList<>(listaSubtareas); // Retorna una copia de la lista de subtareas
+    public ListaEnlazada<Tarea> obtenerSubtareas() {
+        ListaEnlazada<Tarea> copia = new ListaEnlazada<>();
+        for (int i = 0; i < listaSubtareas.getTamanio(); i++) {
+            copia.insertar(listaSubtareas.getElementoEnPosicion(i));
+        }
+        return copia;
     }
 
     /**
      * Verifica si la tarea está completada.
+     * @return true si la tarea está completada, false en caso contrario
      */
     public boolean estaCompletada() {
         return estaCompletada;
@@ -65,6 +74,7 @@ public class Tarea implements Cloneable {
 
     /**
      * Establece si la tarea está completada.
+     * @param estaCompletada El estado de completitud de la tarea
      */
     public void establecerCompletada(boolean estaCompletada) {
         this.estaCompletada = estaCompletada;
@@ -72,29 +82,36 @@ public class Tarea implements Cloneable {
 
     /**
      * Establece la lista de subtareas.
+     * @param subtareas Lista de subtareas a establecer
      */
-    public void establecerSubtareas(List<Tarea> subtareas) {
-        this.listaSubtareas = new ArrayList<>(subtareas); // Crea una copia de la lista de subtareas
+    public void establecerSubtareas(ListaEnlazada<Tarea> subtareas) {
+        this.listaSubtareas = new ListaEnlazada<>();
+        for (int i = 0; i < subtareas.getTamanio(); i++) {
+            this.listaSubtareas.insertar(subtareas.getElementoEnPosicion(i));
+        }
     }
 
     /**
      * Agrega una nueva subtarea a la tarea.
+     * @param subtarea La subtarea a agregar
      */
     public void agregarSubtarea(Tarea subtarea) {
-        this.listaSubtareas.add(new Tarea(subtarea)); // Agrega una copia de la subtarea
+        this.listaSubtareas.insertar(new Tarea(subtarea));
     }
 
     /**
      * Elimina una subtarea en base a su índice.
+     * @param index El índice de la subtarea a eliminar
      */
     public void eliminarSubtarea(int index) {
-        if (index >= 0 && index < listaSubtareas.size()) {
-            listaSubtareas.remove(index);
+        if (index >= 0 && index < listaSubtareas.getTamanio()) {
+            listaSubtareas.eliminarEn(index);
         }
     }
 
     /**
      * Método para clonar la tarea, incluyendo sus subtareas.
+     * @return Una copia profunda de la tarea
      */
     @Override
     public Tarea clone() {
@@ -107,11 +124,11 @@ public class Tarea implements Cloneable {
                     this.fechaCreacion.getHour(),
                     this.fechaCreacion.getMinute()
             );
-            clonada.listaSubtareas = new ArrayList<>();
+            clonada.listaSubtareas = new ListaEnlazada<>();
             clonada.estaCompletada = this.estaCompletada;
             // Clona las subtareas de la tarea original
-            for (Tarea subtarea : this.listaSubtareas) {
-                clonada.listaSubtareas.add(subtarea.clone());
+            for (int i = 0; i < this.listaSubtareas.getTamanio(); i++) {
+                clonada.listaSubtareas.insertar(this.listaSubtareas.getElementoEnPosicion(i).clone());
             }
             return clonada;
         } catch (CloneNotSupportedException e) {
@@ -119,29 +136,49 @@ public class Tarea implements Cloneable {
         }
     }
 
-    // Métodos para obtener la información de la tarea
+    /**
+     * Obtiene la fecha de creación de la tarea.
+     * @return La fecha de creación
+     */
     public LocalDateTime obtenerFechaCreacion() {
         return fechaCreacion;
     }
 
+    /**
+     * Establece la fecha de creación de la tarea.
+     * @param fechaCreacion La nueva fecha de creación
+     */
     public void establecerFechaCreacion(LocalDateTime fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
 
+    /**
+     * Obtiene la descripción de la tarea.
+     * @return La descripción de la tarea
+     */
     public String obtenerDescripcion() {
         return descripcionTarea;
     }
 
+    /**
+     * Obtiene la duración estimada de la tarea.
+     * @return La duración en minutos
+     */
     public int obtenerDuracion() {
         return tiempoEstimado;
     }
 
+    /**
+     * Verifica si la tarea es obligatoria.
+     * @return true si la tarea es obligatoria, false en caso contrario
+     */
     public boolean esObligatoria() {
         return esObligatoria;
     }
 
     /**
      * Método para mostrar los detalles de la tarea.
+     * @return Una representación en texto de la tarea
      */
     @Override
     public String toString() {
@@ -150,12 +187,15 @@ public class Tarea implements Cloneable {
                 ", obligatoria=" + esObligatoria +
                 ", duracion=" + tiempoEstimado +
                 ", fechaCreacion=" + fechaCreacion +
-                ", subtareas=" + listaSubtareas.size() +
+                ", subtareas=" + listaSubtareas.getTamanio() +
                 ", finalizada=" + estaCompletada +
                 '}';
     }
 
-    // Nombre de la tarea
+    /**
+     * Obtiene el nombre (descripción) de la tarea.
+     * @return El nombre de la tarea
+     */
     public String obtenerNombre() {
         return descripcionTarea;
     }

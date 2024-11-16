@@ -1,4 +1,4 @@
-package edu.co.uniquindio.EstructuraDeDatos;
+package edu.co.uniquindio.Modelo.EstructuraDeDatos;
 
 /**
  * Clase que implementa una lista enlazada simple.

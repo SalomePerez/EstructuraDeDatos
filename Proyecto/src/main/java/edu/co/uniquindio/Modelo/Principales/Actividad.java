@@ -1,6 +1,6 @@
-package edu.co.uniquindio.Modelo;
+package edu.co.uniquindio.Modelo.Principales;
 
-import edu.co.uniquindio.EstructuraDeDatos.Cola;
+import edu.co.uniquindio.Modelo.EstructuraDeDatos.Cola;
 
 import java.time.LocalDateTime;
 

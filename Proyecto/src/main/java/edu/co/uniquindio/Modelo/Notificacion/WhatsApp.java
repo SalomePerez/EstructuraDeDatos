@@ -1,4 +1,4 @@
-package edu.co.uniquindio.Modelo;
+package edu.co.uniquindio.Modelo.Notificacion;
 
 import okhttp3.*;
 import org.json.JSONArray;

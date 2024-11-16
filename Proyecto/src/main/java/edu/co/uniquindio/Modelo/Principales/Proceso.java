@@ -1,6 +1,6 @@
-package edu.co.uniquindio.Modelo;
+package edu.co.uniquindio.Modelo.Principales;
 
-import edu.co.uniquindio.EstructuraDeDatos.ListaEnlazada;
+import edu.co.uniquindio.Modelo.EstructuraDeDatos.ListaEnlazada;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -8,20 +8,20 @@ import java.util.UUID;
 public class Proceso {
     private String nombre; // Título del proceso
     private UUID identificador; // Identificador único del proceso
-    private ListaEnlazada<Tarea> listaDeTareas; // Lista de tareas asociadas al proceso
+    private ListaEnlazada<Actividad> listaDeActividades; // Lista de Actividads asociadas al proceso
     private LocalDateTime fechaDeInicio; // Fecha de inicio del proyecto
 
     // Constructor para crear un nuevo proyecto con el título proporcionado
     public Proceso(String nombre) {
         this.identificador = UUID.randomUUID(); // Genera un UUID único para el proyecto
         this.nombre = nombre; // Asigna el título al proyecto
-        this.listaDeTareas = new ListaEnlazada<>(); // Inicializa la lista de tareas vacía
+        this.listaDeActividades = new ListaEnlazada<>(); // Inicializa la lista de Actividads vacía
         this.fechaDeInicio = LocalDateTime.now(); // Asigna la fecha actual como fecha de inicio
     }
 
-    // Método para agregar una tarea al proceso
-    public void agregarTarea(Tarea tarea) {
-        listaDeTareas.insertar(tarea); // Inserta la tarea en la lista
+    // Método para agregar una Actividad al proceso
+    public void agregarActividad(Actividad actividad) {
+        listaDeActividades.insertar(actividad); // Inserta la Actividad en la lista
     }
 
     // Getter para obtener el identificador del proceso
@@ -44,14 +44,14 @@ public class Proceso {
         this.nombre = titulo;
     }
 
-    // Getter para obtener la lista de tareas del proyecto
-    public ListaEnlazada<Tarea> obtenerListaDeTareas() {
-        return listaDeTareas;
+    // Getter para obtener la lista de Actividads del proyecto
+    public ListaEnlazada<Actividad> obtenerlistaDeActividades() {
+        return listaDeActividades;
     }
 
-    // Setter para cambiar la lista de tareas del proceso
-    public void establecerListaDeTareas(ListaEnlazada<Tarea> listaDeTareas) {
-        this.listaDeTareas = listaDeTareas;
+    // Setter para cambiar la lista de Actividads del proceso
+    public void establecerlistaDeActividades(ListaEnlazada<Actividad> listaDeActividades) {
+        this.listaDeActividades = listaDeActividades;
     }
 
     // Getter para obtener la fecha de inicio del proceso

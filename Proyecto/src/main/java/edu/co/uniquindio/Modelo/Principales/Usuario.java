@@ -1,4 +1,4 @@
-package edu.co.uniquindio.Modelo;
+package edu.co.uniquindio.Modelo.Principales;
 
 public class Usuario {
 
