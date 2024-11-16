@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class Proceso {
-    private String nombre; // Título del proceso
+    private static Proceso instancia;    private String nombre; // Título del proceso
     private UUID identificador; // Identificador único del proceso
     private ListaEnlazada<Actividad> listaDeActividades; // Lista de Actividads asociadas al proceso
     private LocalDateTime fechaDeInicio; // Fecha de inicio del proyecto
@@ -18,6 +18,7 @@ public class Proceso {
         this.listaDeActividades = new ListaEnlazada<>(); // Inicializa la lista de Actividads vacía
         this.fechaDeInicio = LocalDateTime.now(); // Asigna la fecha actual como fecha de inicio
     }
+
 
     // Método para agregar una Actividad al proceso
     public void agregarActividad(Actividad actividad) {

@@ -1,14 +1,27 @@
 package edu.co.uniquindio.Modelo.Administradores;
 
+import edu.co.uniquindio.Modelo.Auxiliares.TiempoProceso;
+import edu.co.uniquindio.Modelo.Auxiliares.TipoBusqueda;
+import edu.co.uniquindio.Modelo.EstructuraDeDatos.Cola;
+import edu.co.uniquindio.Modelo.EstructuraDeDatos.ListaEnlazada;
+import edu.co.uniquindio.Modelo.EstructuraDeDatos.Nodo;
+import edu.co.uniquindio.Modelo.Principales.Actividad;
+import edu.co.uniquindio.Modelo.Principales.Proceso;
+import edu.co.uniquindio.Modelo.Principales.Tarea;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 public class AdministradorConsultas {
-    private final GestorProcesos gestorProcesos;
+    private final AdministradorProcesos administradorProcesos;
 
     /**
      * Constructor de la clase AdministradorConsultas.
-     * @param gestorProcesos Instancia de GestorProcesos para gestionar procesos.
+     * @param administradorProcesos Instancia de AdministradorProcesos para gestionar procesos.
      */
-    public AdministradorConsultas(GestorProcesos gestorProcesos) {
-        this.gestorProcesos = gestorProcesos;
+    public AdministradorConsultas(AdministradorProcesos administradorProcesos) {
+        this.administradorProcesos = administradorProcesos;
     }
 
     /**
@@ -21,12 +34,12 @@ public class AdministradorConsultas {
      * @param intercambiarTareas  Indica si se deben intercambiar las tareas.
      */
     public void intercambiarActividades(UUID idProceso, String nombrePrimeraActividad, String nombreSegundaActividad, boolean intercambiarTareas) {
-        Proceso proceso = gestorProcesos.buscarProceso(idProceso);
+        Proceso proceso = administradorProcesos.buscarProcesoPorId(idProceso);
         if (proceso == null) {
             throw new IllegalStateException("Proceso no encontrado.");
         }
 
-        ListaEnlazada<Actividad> actividades = proceso.getActividades();
+        ListaEnlazada<Actividad> actividades = proceso.obtenerlistaDeActividades();
         Actividad actividad1 = buscarActividadPorNombre(actividades, nombrePrimeraActividad);
         Actividad actividad2 = buscarActividadPorNombre(actividades, nombreSegundaActividad);
 
@@ -38,16 +51,16 @@ public class AdministradorConsultas {
         Cola<Tarea> tareasPrimeraActividad = new Cola<>();
         Cola<Tarea> tareasSegundaActividad = new Cola<>();
 
-        copiarTareas(actividad1.getTareas(), tareasPrimeraActividad);
-        copiarTareas(actividad2.getTareas(), tareasSegundaActividad);
+        copiarTareas(actividad1.obtenerTareas(), tareasPrimeraActividad);
+        copiarTareas(actividad2.obtenerTareas(), tareasSegundaActividad);
 
         // Intercambia las posiciones en la lista de actividades.
         intercambiarPosicionesEnLista(actividades, actividad1, actividad2);
 
         // Restaura las tareas originales si no se deben intercambiar.
         if (!intercambiarTareas) {
-            actividad1.setTareas(tareasSegundaActividad);
-            actividad2.setTareas(tareasPrimeraActividad);
+            actividad1.establecerTareas(tareasSegundaActividad);
+            actividad2.establecerTareas(tareasPrimeraActividad);
         }
     }
 
@@ -58,10 +71,10 @@ public class AdministradorConsultas {
      * @param destino Cola donde se copiarán las tareas.
      */
     private void copiarTareas(Cola<Tarea> origen, Cola<Tarea> destino) {
-        Nodo<Tarea> nodoActual = origen.getNodoPrimero();
+        Nodo<Tarea> nodoActual = origen.obtenerPrimero();
         while (nodoActual != null) {
-            destino.encolar(nodoActual.getValorNodo());
-            nodoActual = nodoActual.getSiguienteNodo();
+            destino.encolar(nodoActual.getDato());
+            nodoActual = nodoActual.getSiguiente();
         }
     }
 
@@ -84,51 +97,51 @@ public class AdministradorConsultas {
 
         // Busca los nodos correspondientes a las actividades.
         while (nodoActual != null) {
-            if (nodoActual.getValorNodo().equals(actividad1)) {
+            if (nodoActual.getDato().equals(actividad1)) {
                 nodoAnterior1 = nodoAnterior;
                 nodo1 = nodoActual;
             }
-            if (nodoActual.getValorNodo().equals(actividad2)) {
+            if (nodoActual.getDato().equals(actividad2)) {
                 nodoAnterior2 = nodoAnterior;
                 nodo2 = nodoActual;
             }
             nodoAnterior = nodoActual;
-            nodoActual = nodoActual.getSiguienteNodo();
+            nodoActual = nodoActual.getSiguiente();
         }
 
         // Intercambia las referencias de los nodos.
         if (nodo1 != null && nodo2 != null) {
-            Nodo<Actividad> siguiente1 = nodo1.getSiguienteNodo();
-            Nodo<Actividad> siguiente2 = nodo2.getSiguienteNodo();
+            Nodo<Actividad> siguiente1 = nodo1.getSiguiente();
+            Nodo<Actividad> siguiente2 = nodo2.getSiguiente();
 
-            if (nodo1.getSiguienteNodo() == nodo2) { // Caso especial: nodos adyacentes.
-                nodo1.setSiguienteNodo(siguiente2);
-                nodo2.setSiguienteNodo(nodo1);
+            if (nodo1.getSiguiente() == nodo2) { // Caso especial: nodos adyacentes.
+                nodo1.setSiguiente(siguiente2);
+                nodo2.setSiguiente(nodo1);
                 if (nodoAnterior1 != null) {
-                    nodoAnterior1.setSiguienteNodo(nodo2);
+                    nodoAnterior1.setSiguiente(nodo2);
                 } else {
                     listaActividades.setCabeza(nodo2);
                 }
-            } else if (nodo2.getSiguienteNodo() == nodo1) {
-                nodo2.setSiguienteNodo(siguiente1);
-                nodo1.setSiguienteNodo(nodo2);
+            } else if (nodo2.getSiguiente() == nodo1) {
+                nodo2.setSiguiente(siguiente1);
+                nodo1.setSiguiente(nodo2);
                 if (nodoAnterior2 != null) {
-                    nodoAnterior2.setSiguienteNodo(nodo1);
+                    nodoAnterior2.setSiguiente(nodo1);
                 } else {
                     listaActividades.setCabeza(nodo1);
                 }
             } else { // Caso general.
-                nodo1.setSiguienteNodo(siguiente2);
-                nodo2.setSiguienteNodo(siguiente1);
+                nodo1.setSiguiente(siguiente2);
+                nodo2.setSiguiente(siguiente1);
 
                 if (nodoAnterior1 != null) {
-                    nodoAnterior1.setSiguienteNodo(nodo2);
+                    nodoAnterior1.setSiguiente(nodo2);
                 } else {
                     listaActividades.setCabeza(nodo2);
                 }
 
                 if (nodoAnterior2 != null) {
-                    nodoAnterior2.setSiguienteNodo(nodo1);
+                    nodoAnterior2.setSiguiente(nodo1);
                 } else {
                     listaActividades.setCabeza(nodo1);
                 }
@@ -146,10 +159,10 @@ public class AdministradorConsultas {
     private Actividad buscarActividadPorNombre(ListaEnlazada<Actividad> listaActividades, String nombre) {
         Nodo<Actividad> nodoActual = listaActividades.getCabeza();
         while (nodoActual != null) {
-            if (nodoActual.getValorNodo().getNombre().equals(nombre)) {
-                return nodoActual.getValorNodo();
+            if (nodoActual.getDato().obtenerNombre().equals(nombre)) {
+                return nodoActual.getDato();
             }
-            nodoActual = nodoActual.getSiguienteNodo();
+            nodoActual = nodoActual.getSiguiente();
         }
         return null;
     }
@@ -161,16 +174,16 @@ public class AdministradorConsultas {
      * @param idProceso   Identificador único del proceso.
      * @param tipoBusqueda Tipo de búsqueda: desde el inicio, actividad actual o específica.
      * @param criterio    Criterio utilizado para filtrar las tareas (puede ser vacío).
-     * @return Lista de tareas que coinciden con el criterio de búsqueda.
+     * @return ListaEnlazada de tareas que coinciden con el criterio de búsqueda.
      */
-    public List<Tarea> buscarTareasPorCriterio(UUID idProceso, TipoBusqueda tipoBusqueda, String criterio) {
-        Proceso proceso = gestorProcesos.buscarProceso(idProceso);
+    public ListaEnlazada<Tarea> buscarTareasPorCriterio(UUID idProceso, TipoBusqueda tipoBusqueda, String criterio) {
+        Proceso proceso = administradorProcesos.buscarProcesoPorId(idProceso);
         if (proceso == null) {
             throw new IllegalStateException("Proceso no encontrado.");
         }
 
-        List<Tarea> tareasEncontradas = new ArrayList<>();
-        ListaEnlazada<Actividad> actividades = proceso.getActividades();
+        ListaEnlazada<Tarea> tareasEncontradas = new ListaEnlazada<>();
+        ListaEnlazada<Actividad> actividades = proceso.obtenerlistaDeActividades();
 
         switch (tipoBusqueda) {
             case DESDE_INICIO:
@@ -202,7 +215,7 @@ public class AdministradorConsultas {
      * @return Un objeto {@link TiempoProceso} con los tiempos mínimos y máximos restantes.
      */
     public TiempoProceso calcularTiempoRestanteProceso(UUID idProceso) {
-        Proceso proceso = gestorProcesos.buscarProceso(idProceso);
+        Proceso proceso = administradorProcesos.buscarProcesoPorId(idProceso);
         if (proceso == null) {
             throw new IllegalStateException("Proceso no encontrado.");
         }
@@ -210,28 +223,28 @@ public class AdministradorConsultas {
         int tiempoMinimo = 0;
         int tiempoMaximo = 0;
 
-        Nodo<Actividad> nodoActual = proceso.getActividades().getCabeza();
+        Nodo<Actividad> nodoActual = proceso.obtenerlistaDeActividades().getCabeza();
         while (nodoActual != null) {
-            Actividad actividad = nodoActual.getValorNodo();
-            Cola<Tarea> tareas = actividad.getTareas();
-            Nodo<Tarea> nodoTarea = tareas.getNodoPrimero();
+            Actividad actividad = nodoActual.getDato();
+            Cola<Tarea> tareas = actividad.obtenerTareas();
+            Nodo<Tarea> nodoTarea = tareas.obtenerPrimero();
 
             while (nodoTarea != null) {
-                Tarea tarea = nodoTarea.getValorNodo();
+                Tarea tarea = nodoTarea.getDato();
 
-                if (actividad.isObligatoria() && tarea.isObligatoria()) {
-                    tiempoMinimo += tarea.getDuracion();
+                if (actividad.esObligatoria() && tarea.esObligatoria()) {
+                    tiempoMinimo += tarea.obtenerDuracion();
                 }
-                tiempoMaximo += tarea.getDuracion();
+                tiempoMaximo += tarea.obtenerDuracion();
 
-                nodoTarea = nodoTarea.getSiguienteNodo();
+                nodoTarea = nodoTarea.getSiguiente();
             }
 
-            nodoActual = nodoActual.getSiguienteNodo();
+            nodoActual = nodoActual.getSiguiente();
         }
 
         LocalDateTime ahora = LocalDateTime.now();
-        Duration tiempoTranscurrido = Duration.between(proceso.getFechaInicio(), ahora);
+        Duration tiempoTranscurrido = Duration.between(proceso.obtenerFechaDeInicio(), ahora);
         long minutosTranscurridos = tiempoTranscurrido.toMinutes();
 
         int tiempoMinimoRestante = Math.max(tiempoMinimo - (int) minutosTranscurridos, 0);
@@ -243,15 +256,15 @@ public class AdministradorConsultas {
     /**
      * Busca tareas desde el inicio de la lista de actividades.
      *
-     * @param actividades      Lista enlazada de actividades.
+     * @param actividades       Lista enlazada de actividades.
      * @param criterio         Criterio utilizado para filtrar las tareas.
-     * @param tareasEncontradas Lista donde se almacenarán las tareas encontradas.
+     * @param tareasEncontradas Lista enlazada donde se almacenarán las tareas encontradas.
      */
-    private void buscarTareasDesdeInicio(ListaEnlazada<Actividad> actividades, String criterio, List<Tarea> tareasEncontradas) {
+    private void buscarTareasDesdeInicio(ListaEnlazada<Actividad> actividades, String criterio, ListaEnlazada<Tarea> tareasEncontradas) {
         Nodo<Actividad> nodoActual = actividades.getCabeza();
         while (nodoActual != null) {
-            buscarTareasEnActividad(nodoActual.getValorNodo(), criterio, tareasEncontradas);
-            nodoActual = nodoActual.getSiguienteNodo();
+            buscarTareasEnActividad(nodoActual.getDato(), criterio, tareasEncontradas);
+            nodoActual = nodoActual.getSiguiente();
         }
     }
 
@@ -260,18 +273,18 @@ public class AdministradorConsultas {
      *
      * @param actividad        Actividad donde buscar las tareas.
      * @param criterio         Criterio utilizado para filtrar las tareas.
-     * @param tareasEncontradas Lista donde se almacenarán las tareas encontradas.
+     * @param tareasEncontradas Lista enlazada donde se almacenarán las tareas encontradas.
      */
-    private void buscarTareasEnActividad(Actividad actividad, String criterio, List<Tarea> tareasEncontradas) {
-        Cola<Tarea> tareas = actividad.getTareas();
-        Nodo<Tarea> nodoTarea = tareas.getNodoPrimero();
+    private void buscarTareasEnActividad(Actividad actividad, String criterio, ListaEnlazada<Tarea> tareasEncontradas) {
+        Cola<Tarea> tareas = actividad.obtenerTareas();
+        Nodo<Tarea> nodoTarea = tareas.obtenerPrimero();
 
         while (nodoTarea != null) {
-            Tarea tarea = nodoTarea.getValorNodo();
-            if (criterio.isEmpty() || tarea.getDescripcion().toLowerCase().contains(criterio.toLowerCase())) {
-                tareasEncontradas.add(tarea);
+            Tarea tarea = nodoTarea.getDato();
+            if (criterio.isEmpty() || tarea.obtenerDescripcion().toLowerCase().contains(criterio.toLowerCase())) {
+                tareasEncontradas.insertar(tarea);
             }
-            nodoTarea = nodoTarea.getSiguienteNodo();
+            nodoTarea = nodoTarea.getSiguiente();
         }
     }
 
@@ -287,10 +300,10 @@ public class AdministradorConsultas {
         }
 
         Nodo<Actividad> nodoActual = actividades.getCabeza();
-        while (nodoActual.getSiguienteNodo() != null) {
-            nodoActual = nodoActual.getSiguienteNodo();
+        while (nodoActual.getSiguiente() != null) {
+            nodoActual = nodoActual.getSiguiente();
         }
-        return nodoActual.getValorNodo();
+        return nodoActual.getDato();
     }
 
 

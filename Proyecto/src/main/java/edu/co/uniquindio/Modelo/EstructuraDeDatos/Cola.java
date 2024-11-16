@@ -68,11 +68,11 @@ public class Cola<T> {
      * @return El elemento al frente de la cola.
      * @throws IllegalStateException si la cola está vacía.
      */
-    public T obtenerFrente() {
+    public Nodo<T> obtenerPrimero() {
         if (estaVacia()) {
             throw new IllegalStateException("La cola está vacía.");
         }
-        return primero.dato;
+        return primero;
     }
 
     /**
