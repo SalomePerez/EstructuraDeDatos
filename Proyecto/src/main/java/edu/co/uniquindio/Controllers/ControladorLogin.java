@@ -1,5 +1,7 @@
 package edu.co.uniquindio.Controllers;
 
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import edu.co.uniquindio.Model.Administradores.AdministradorArchivos;
 import edu.co.uniquindio.Model.EstructuraDeDatos.ListaEnlazada;
 import edu.co.uniquindio.Model.Principales.Usuario;
