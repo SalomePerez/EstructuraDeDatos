@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 
 <?import javafx.scene.control.TitledPane?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.co.uniquindio.Controllers.ControladorLogin"
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.co.uniquindio.Application.HelloController"
             prefHeight="502.0" prefWidth="716.0">
     <children>
         <TitledPane prefHeight="503.0" prefWidth="720.0">
