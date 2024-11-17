@@ -1,10 +1,14 @@
 package edu.co.uniquindio.Modelo.EstructuraDeDatos;
+
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 /**
  * Clase que implementa una cola genérica utilizando nodos enlazados.
  *
  * @param <T> El tipo de dato que almacenará la cola.
  */
-public class Cola<T> {
+public class Cola<T> implements Iterable<T>{
     private Nodo<T> primero; // Nodo primero de la cola
     private Nodo<T> ultimo;  // Nodo al ultimo de la cola
     private int tamano;     // Número de elementos en la cola
@@ -82,5 +86,27 @@ public class Cola<T> {
      */
     public int obtenerTamano() {
         return tamano;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new Iterator<T>() {
+            private Nodo<T> actual = primero;
+
+            @Override
+            public boolean hasNext() {
+                return actual != null;
+            }
+
+            @Override
+            public T next() {
+                if (!hasNext()) {
+                    throw new NoSuchElementException();
+                }
+                T dato = actual.dato;
+                actual = actual.siguiente;
+                return dato;
+            }
+        };
     }
 }
