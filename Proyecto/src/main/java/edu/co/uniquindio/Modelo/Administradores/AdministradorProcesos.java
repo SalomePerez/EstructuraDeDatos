@@ -42,7 +42,7 @@ public class AdministradorProcesos {
         }
         Proceso nuevoProceso = new Proceso(nombreProceso);
         listaProcesos.insertar(nuevoProceso);
-        notificacionControlador.registrarNotificacionProcesoIniciado(nuevoProceso);
+        notificacionControlador.alertarInicioProceso(nuevoProceso);
         return nuevoProceso;
     }
 
@@ -74,7 +74,7 @@ public class AdministradorProcesos {
             return null;
         }
         for (int i = 0; i < listaProcesos.getTamanio(); i++) {
-            Proceso procesoActual = listaProcesos.get(i);
+            Proceso procesoActual = listaProcesos.getElementoEnPosicion(i);
             if (procesoActual.obtenerIdentificador().equals(idProceso)) {
                 return procesoActual;
             }

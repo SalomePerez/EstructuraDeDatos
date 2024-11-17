@@ -134,25 +134,12 @@ public class ListaEnlazada<T> {
         int indice = 0;
         // Busca el elemento y devuelve su índice
         while (actual != null && !actual.getDato().equals(dato)) {
-            actual = actual.getSiguiente();
+             actual = actual.getSiguiente();
             indice++;
         }
         return actual != null ? indice : -1; // Si lo encuentra, devuelve el índice; si no, -1
     }
 
-    // Método para obtener un elemento en un índice específico
-    public T get(int indice) {
-        // Si el índice es inválido, lanza una excepción
-        if (indice < 0 || indice >= tamanio) {
-            throw new IndexOutOfBoundsException("Índice inválido: " + indice);
-        }
-        Nodo<T> actual = cabeza;
-        // Recorre la lista hasta el índice indicado
-        for (int i = 0; i < indice; i++) {
-            actual = actual.getSiguiente();
-        }
-        return actual.getDato(); // Retorna el valor en ese índice
-    }
 
     // Método para eliminar un elemento en una posición específica
     public void eliminarEn(int indice) {

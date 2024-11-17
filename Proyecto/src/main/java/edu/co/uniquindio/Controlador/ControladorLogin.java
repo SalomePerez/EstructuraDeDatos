@@ -67,7 +67,7 @@ public class ControladorLogin {
      */
     private boolean existeUsuario(String identificacion) {
         for (int i = 0; i < usuarios.getTamanio(); i++) {
-            if (usuarios.get(i).getIdentificacion().equals(identificacion)) {
+            if (usuarios.getElementoEnPosicion(i).getIdentificacion().equals(identificacion)) {
                 return true;
             }
         }
@@ -83,8 +83,8 @@ public class ControladorLogin {
      */
     public boolean autenticarUsuario(String identificacion, String contrasenia) {
         for (int i = 0; i < usuarios.getTamanio(); i++) {
-            if (usuarios.get(i).getIdentificacion().equals(identificacion) && usuarios.get(i).getContrasenia().equals(contrasenia)) {
-                usuarioActual = usuarios.get(i);
+            if (usuarios.getElementoEnPosicion(i).getIdentificacion().equals(identificacion) && usuarios.getElementoEnPosicion(i).getContrasenia().equals(contrasenia)) {
+                usuarioActual = usuarios.getElementoEnPosicion(i);
                 return true;
             }
         }

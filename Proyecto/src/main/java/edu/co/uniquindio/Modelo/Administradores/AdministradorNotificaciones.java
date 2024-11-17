@@ -51,17 +51,17 @@ public class AdministradorNotificaciones {
      * Agrega un nuevo proceso al sistema de monitoreo.
      * @param proceso El proceso a monitorear
      */
-    private void agregarProcesoMonitoreo(Proceso proceso) {
+    public void agregarProcesoMonitoreo(Proceso proceso) {
         if (proceso != null) {
             procesosActivos.insertar(proceso);
-            NotificacionControlador.getInstance().registrarNotificacionProcesoIniciado(proceso);
+            NotificacionControlador.getInstance().alertarInicioProceso(proceso);
         }
     }
 
     /**
      * Procesa la verificación de estados de todos los procesos activos.
      */
-    private void procesarVerificacionEstados() {
+    public void procesarVerificacionEstados() {
         LocalDateTime momentoActual = LocalDateTime.now();
         for (int i = 0; i < procesosActivos.getTamanio(); i++) {
             verificarEstadoProceso(procesosActivos.getElementoEnPosicion(i), momentoActual);
@@ -73,7 +73,7 @@ public class AdministradorNotificaciones {
      * @param proceso El proceso a verificar
      * @param momentoActual El momento actual para los cálculos de tiempo
      */
-    private void verificarEstadoProceso(Proceso proceso, LocalDateTime momentoActual) {
+    public void verificarEstadoProceso(Proceso proceso, LocalDateTime momentoActual) {
         if (proceso != null && proceso.obtenerlistaDeActividades() != null) {
             ListaEnlazada<Actividad> actividades = proceso.obtenerlistaDeActividades();
             for (int i = 0; i < actividades.getTamanio(); i++) {
@@ -89,7 +89,7 @@ public class AdministradorNotificaciones {
      * @param proceso El proceso al que pertenece la actividad
      * @param momentoActual El momento actual para los cálculos de tiempo
      */
-    private void procesarVerificacionTareas(Actividad actividad, Proceso proceso, LocalDateTime momentoActual) {
+    public void procesarVerificacionTareas(Actividad actividad, Proceso proceso, LocalDateTime momentoActual) {
         if (actividad == null || actividad.obtenerTareas() == null) return;
 
         Cola<Tarea> copiaTareas = new Cola<>();
@@ -97,13 +97,13 @@ public class AdministradorNotificaciones {
 
         while (!actividad.obtenerTareas().estaVacia()) {
             Tarea tareaActual = actividad.obtenerTareas().desencolar();
-            existenTareasVencidas |= procesarTareaIndividual(tareaActual, actividad, proceso, momentoActual, copiaTareas);
+            existenTareasVencidas |=    procesarTareaIndividual(tareaActual, actividad, proceso, momentoActual, copiaTareas);
         }
 
         restaurarTareas(actividad, copiaTareas);
 
         if (existenTareasVencidas && actividad.esObligatoria()) {
-            NotificacionControlador.getInstance().registrarNotificacionActividadEnRiesgo(actividad, proceso);
+            NotificacionControlador.getInstance().alertarRiesgoActividad(actividad, proceso);
         }
     }
 
@@ -124,12 +124,12 @@ public class AdministradorNotificaciones {
         long tiempoRestante = tarea.obtenerDuracion() - tiempoTranscurrido;
 
         if (tiempoRestante <= 0 && tarea.esObligatoria()) {
-            NotificacionControlador.getInstance().registrarNotificacionTareaVencida(tarea, actividad, proceso);
+            NotificacionControlador.getInstance().alertarVencimientoTarea(tarea, actividad, proceso);
             return true;
         } else {
             copiaTareas.encolar(tarea);
             if (tiempoRestante > 0 && tiempoRestante <= 30 && tarea.esObligatoria()) {
-                NotificacionControlador.getInstance().registrarNotificacionTareaProximaVencer(tarea, actividad, proceso, tiempoRestante);
+                NotificacionControlador.getInstance().alertarProximoVencimiento(tarea, actividad, proceso, tiempoRestante);
             }
             return false;
         }

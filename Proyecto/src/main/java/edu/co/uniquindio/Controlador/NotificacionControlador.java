@@ -1,6 +1,5 @@
 package edu.co.uniquindio.Controlador;
 
-
 import edu.co.uniquindio.Modelo.EstructuraDeDatos.Cola;
 import edu.co.uniquindio.Modelo.Notificacion.*;
 import edu.co.uniquindio.Modelo.Principales.Actividad;
@@ -12,30 +11,34 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.function.Consumer;
 
+
+/**
+ * Controlador responsable de la gestión y distribución de notificaciones del sistema.
+ * Implementa el patrón Singleton para garantizar una única instancia de gestión de notificaciones.
+ */
+
 public class NotificacionControlador {
-    // Instancia única (Singleton)
     private static NotificacionControlador instancia;
-
-    // Cola para almacenar las notificaciones pendientes de procesar
-    private Cola<Notificacion> colaNotificaciones;
-
-    // Función que manejará las notificaciones generadas
+    private final Cola<Notificacion> colaNotificaciones;
     private Consumer<Notificacion> manejadorNotificaciones;
+    private final AsyncEmailService servicioEmail;
+    private final WhatsApp servicioWhatsApp;
 
-    // Servicios para enviar notificaciones por correo y WhatsApp
-    private Email servicioEmail;
-    private AsyncEmailService servicioEmailMejorado;
-    private WhatsApp servicioWhatsApp;
-
-    // Constructor privado para el patrón Singleton
-    public NotificacionControlador() {
+    /**
+     * Constructor privado que inicializa los servicios de notificación.
+     * Parte del patrón Singleton.
+     */
+    private NotificacionControlador() {
         this.colaNotificaciones = new Cola<>();
-        this.servicioEmail = Email.getInstance(); // Servicio de correo estándar
-        this.servicioEmailMejorado = AsyncEmailService.getInstance(); // Servicio mejorado
-        this.servicioWhatsApp = WhatsApp.getInstance(); // Servicio de WhatsApp
+        this.servicioEmail = AsyncEmailService.getInstance();
+        this.servicioWhatsApp = WhatsApp.getInstance();
     }
 
-    // Método estático para obtener la instancia única (Singleton)
+    /**
+     * Obtiene la instancia única del controlador de notificaciones.
+     *
+     * @return instancia única del NotificacionControlador
+     */
     public static NotificacionControlador getInstance() {
         if (instancia == null) {
             instancia = new NotificacionControlador();
@@ -43,106 +46,133 @@ public class NotificacionControlador {
         return instancia;
     }
 
-    // Establece una función manejadora personalizada para las notificaciones
+    /**
+     * Establece el manejador personalizado para el procesamiento de notificaciones.
+     *
+     * @param manejador función que procesará las notificaciones
+     */
+
     public void establecerManejadorNotificaciones(Consumer<Notificacion> manejador) {
         this.manejadorNotificaciones = manejador;
     }
-
-    // Registra una notificación cuando se crea una actividad en un proceso
-    public void registrarNotificacionActividadCreada(Actividad actividad, Proceso proceso) {
-        generarNotificacion(
-                "Actividad Creada",
-                "La actividad '" + actividad.obtenerNombre() + "' ha sido creada en el proceso '" +
-                        proceso.obtenerTitulo() + "'",
-                TipoNotificacion.ACTIVIDAD_CREADA,
-                PrioridadNotificaciones.valueOf(actividad.esObligatoria() ? PrioridadNotificaciones.ALTA.getDescripcion() : PrioridadNotificaciones.MEDIA.getDescripcion()),
-                proceso.obtenerIdentificador().toString()
-        );
-    }
-
-
-    // Registra una notificación cuando se crea una tarea en una actividad y proceso
-    public void registrarNotificacionTareaCreada(Tarea tarea, Actividad actividad, Proceso proceso) {
-        generarNotificacion(
-                "Nueva Tarea Creada",
-                "Se ha creado la tarea '" + tarea.obtenerDescripcion() + "' en la actividad '" +
-                        actividad.obtenerNombre() + "' del proceso '" + proceso.obtenerTitulo() + "'",
-                TipoNotificacion.TAREA_CREADA,
-                PrioridadNotificaciones.valueOf(tarea.esObligatoria() ? PrioridadNotificaciones.ALTA.getDescripcion() : PrioridadNotificaciones.MEDIA.getDescripcion()),
-                proceso.obtenerIdentificador().toString()
-        );
-    }
-
-    // Método interno para generar y manejar notificaciones
-    private void generarNotificacion(String titulo, String mensaje, TipoNotificacion tipo,
+    /**
+     * Procesa y distribuye una nueva notificación en el sistema.
+     *
+     * @param titulo título de la notificación
+     * @param mensaje contenido de la notificación
+     * @param tipo tipo de la notificación
+     * @param prioridad nivel de prioridad de la notificación
+     * @param idReferencia identificador de referencia asociado
+     */
+    public void procesarNotificacion(String titulo, String mensaje, TipoNotificacion tipo,
                                      PrioridadNotificaciones prioridad, String idReferencia) {
-        // Crear la notificación con los datos proporcionados
         Notificacion notificacion = new Notificacion(titulo, idReferencia, prioridad, tipo, mensaje);
-        colaNotificaciones.encolar(notificacion); // Agregar a la cola
+        colaNotificaciones.encolar(notificacion);
 
-        // Si hay un manejador definido, procesar la notificación
         if (manejadorNotificaciones != null) {
             manejadorNotificaciones.accept(notificacion);
-            distribuirNotificaciones(titulo, mensaje); // Enviar notificación a los servicios
+            distribuirNotificacionMulticanal(notificacion);
         }
     }
+    /**
+     * Distribuye una notificación a través de múltiples canales de comunicación.
+     *
+     * @param notificacion la notificación a distribuir
+     */
 
-    // Método para distribuir notificaciones a través de los servicios configurados
-    private void distribuirNotificaciones(String titulo, String mensaje) {
-        servicioEmailMejorado.sendEmailAsync(titulo, mensaje); // Enviar correo
-        enviarNotificacionWhatsApp(titulo, mensaje); // Enviar WhatsApp
+    private void distribuirNotificacionMulticanal(Notificacion notificacion) {
+        servicioEmail.sendEmailAsync(notificacion.getTituloNotificacion(), notificacion.getContenido());
+        enviarNotificacionInstantanea(notificacion);
     }
 
-    // Enviar notificaciones por WhatsApp en un hilo separado
-    private void enviarNotificacionWhatsApp(String titulo, String mensaje) {
+    /**
+     * Envía una notificación instantánea a través de WhatsApp.
+     *
+     * @param notificacion la notificación a enviar
+     */
+
+    private void enviarNotificacionInstantanea(Notificacion notificacion) {
         new Thread(() -> {
             try {
-                DatosContactoUsuario datosContacto = obtenerDatosContactoUsuario(); // Obtener datos del usuario actual
-                if (datosContacto != null && datosContacto.getTelefono() != null &&
-                        !datosContacto.getTelefono().isEmpty()) {
-
-                    String telefono = formatearNumeroTelefono(datosContacto.getTelefono()); // Formatear número
+                DatosContactoUsuario datosContacto = obtenerInformacionContactoUsuario();
+                if (datosContacto != null && datosContacto.getTelefono() != null) {
+                    String telefono = normalizarNumeroTelefono(datosContacto.getTelefono());
                     servicioWhatsApp.sendNotification(
                             telefono,
-                            titulo,
+                            notificacion.getTituloNotificacion(),
                             datosContacto.getNombre(),
-                            mensaje
+                            notificacion.getContenido()
                     );
                 }
-            } catch (IOException e) {
-                registrarErrorNotificacion("Error al leer datos de contacto", e);
             } catch (Exception e) {
-                registrarErrorNotificacion("Error al enviar mensaje WhatsApp", e);
+                System.err.println("Error al enviar notificación WhatsApp: " + e.getMessage());
             }
         }).start();
     }
 
-    // Lee los datos de contacto del usuario actual desde un archivo
-    private DatosContactoUsuario obtenerDatosContactoUsuario() throws IOException {
+    /**
+     * Obtiene la información de contacto del usuario actual.
+     *
+     * @return datos de contacto del usuario
+     * @throws IOException si hay error al leer el archivo
+     */
+
+    private DatosContactoUsuario obtenerInformacionContactoUsuario() throws IOException {
         try (BufferedReader br = new BufferedReader(
                 new FileReader("src/main/resources/Login_Archivo/UsuarioActual"))) {
-            br.readLine(); // Saltar primera línea (irrelevante)
-            String telefono = br.readLine(); // Leer teléfono
-            String nombre = br.readLine(); // Leer nombre
-            return new DatosContactoUsuario(telefono, nombre); // Crear y retornar datos de contacto
+            br.readLine(); // Skip first line
+            return new DatosContactoUsuario(br.readLine(), br.readLine());
         }
     }
 
-    // Formatea el número de teléfono añadiendo el código de país si no está presente
-    private String formatearNumeroTelefono(String telefono) {
+    /**
+     * Normaliza un número de teléfono agregando el prefijo del país si es necesario.
+     *
+     * @param telefono número de teléfono a normalizar
+     * @return número de teléfono normalizado
+     */
+
+    private String normalizarNumeroTelefono(String telefono) {
         return !telefono.startsWith("57") ? "57" + telefono : telefono;
     }
 
-    // Registra errores en el sistema
-    private void registrarErrorNotificacion(String mensaje, Exception e) {
-        System.err.println(mensaje + ": " + e.getMessage()); // Imprimir error
-        e.printStackTrace(); // Mostrar traza del error
+    /**
+     * Notifica la creación de una nueva actividad en el sistema.
+     */
+    public void alertarNuevaActividad(Actividad actividad, Proceso proceso) {
+        String mensaje = String.format("La actividad '%s' ha sido creada en el proceso '%s'",
+                actividad.obtenerNombre(), proceso.obtenerTitulo());
+
+        procesarNotificacion(
+                "Actividad Creada",
+                mensaje,
+                TipoNotificacion.ACTIVIDAD_CREADA,
+                actividad.esObligatoria() ? PrioridadNotificaciones.ALTA : PrioridadNotificaciones.MEDIA,
+                proceso.obtenerIdentificador().toString()
+        );
     }
 
+    /**
+     * Notifica la creación de una nueva tarea en el sistema.
+     */
+    public void alertarNuevaTarea(Tarea tarea, Actividad actividad, Proceso proceso) {
+        String mensaje = String.format("Se ha creado la tarea '%s' en la actividad '%s' del proceso '%s'",
+                tarea.obtenerDescripcion(), actividad.obtenerNombre(), proceso.obtenerTitulo());
 
-    // Registra una notificación al iniciar un proceso
-    public void registrarNotificacionProcesoIniciado(Proceso proceso) {
-        generarNotificacion(
+        procesarNotificacion(
+                "Nueva Tarea Creada",
+                mensaje,
+                TipoNotificacion.TAREA_CREADA,
+                tarea.esObligatoria() ? PrioridadNotificaciones.ALTA : PrioridadNotificaciones.MEDIA,
+                proceso.obtenerIdentificador().toString()
+        );
+    }
+
+    /**
+     * Notifica el inicio de un nuevo proceso en el sistema.
+     */
+    public void alertarInicioProceso(Proceso proceso) {
+        procesarNotificacion(
                 "Nuevo Proceso",
                 "Se ha creado el proceso: " + proceso.obtenerTitulo(),
                 TipoNotificacion.PROCESO_CREADO,
@@ -151,35 +181,44 @@ public class NotificacionControlador {
         );
     }
 
-    // Registra una notificación cuando una tarea vence
-    public void registrarNotificacionTareaVencida(Tarea tarea, Actividad actividad, Proceso proceso) {
-        generarNotificacion(
+    /**
+     * Notifica cuando una tarea ha excedido su tiempo estimado.
+     */
+
+    public void alertarVencimientoTarea(Tarea tarea, Actividad actividad, Proceso proceso) {
+        String mensaje = String.format("La tarea '%s' en la actividad '%s' ha superado su duración estimada de %d minutos",
+                tarea.obtenerDescripcion(), actividad.obtenerNombre(), tarea.obtenerDuracion());
+
+        procesarNotificacion(
                 "Tarea Vencida",
-                "La tarea '" + tarea.obtenerDescripcion() + "' en la actividad '" +
-                        actividad.obtenerNombre() + "' ha superado su duración estimada de " +
-                        tarea.obtenerDuracion() + " minutos",
+                mensaje,
                 TipoNotificacion.TAREA_VENCIDA,
                 PrioridadNotificaciones.ALTA,
                 proceso.obtenerIdentificador().toString()
         );
     }
 
-    // Registra una notificación cuando una tarea está próxima a vencer
-    public void registrarNotificacionTareaProximaVencer(Tarea tarea, Actividad actividad,
-                                                        Proceso proceso, long minutosRestantes) {
-        generarNotificacion(
+    /**
+     * Notifica cuando una tarea está próxima a vencer.
+     */
+    public void alertarProximoVencimiento(Tarea tarea, Actividad actividad, Proceso proceso, long minutosRestantes) {
+        String mensaje = String.format("La tarea '%s' vencerá en %d minutos en la actividad '%s'",
+                tarea.obtenerDescripcion(), minutosRestantes, actividad.obtenerNombre());
+
+        procesarNotificacion(
                 "Tarea Próxima a Vencer",
-                "La tarea '" + tarea.obtenerDescripcion() + "' vencerá en " +
-                        minutosRestantes + " minutos" + " en la actividad '" + actividad.obtenerNombre() + "'",
+                mensaje,
                 TipoNotificacion.TAREA_PROXIMA,
                 PrioridadNotificaciones.MEDIA,
                 proceso.obtenerIdentificador().toString()
         );
     }
 
-    // Registra una notificación cuando una actividad está en riesgo por tareas vencidas
-    public void registrarNotificacionActividadEnRiesgo(Actividad actividad, Proceso proceso) {
-        generarNotificacion(
+    /**
+     * Notifica cuando una actividad está en riesgo por tareas vencidas.
+     */
+    public void alertarRiesgoActividad(Actividad actividad, Proceso proceso) {
+        procesarNotificacion(
                 "Actividad en Riesgo",
                 "La actividad '" + actividad.obtenerNombre() + "' tiene tareas vencidas",
                 TipoNotificacion.ACTIVIDAD_EN_RIESGO,
@@ -187,6 +226,4 @@ public class NotificacionControlador {
                 proceso.obtenerIdentificador().toString()
         );
     }
-
-
 }
