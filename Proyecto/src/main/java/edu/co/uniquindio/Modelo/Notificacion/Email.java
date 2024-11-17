@@ -2,9 +2,10 @@ package edu.co.uniquindio.Modelo.Notificacion;
 
 
 import jakarta.mail.*;
+import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
-import jakarta.mail.internet.AddressException;
+
 import java.util.Properties;
 import java.util.regex.Pattern;
 

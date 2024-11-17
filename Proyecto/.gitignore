@@ -5,14 +5,13 @@ target/
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
-.idea/jarRepozsitories.xml
+.idea/jarRepositories.xml
 .idea/compiler.xml
 .idea/libraries/
 *.iws
 *.iml
 *.ipr
-*.idea
-.idea
+
 ### Eclipse ###
 .apt_generated
 .classpath

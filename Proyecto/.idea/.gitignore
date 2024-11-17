@@ -1,7 +1,7 @@
-# Archivos ignorados predeterminados
+# Default ignored files
 /shelf/
 /workspace.xml
-# Solicitudes de cliente HTTP basadas en editor
+# Editor-based HTTP Client requests
 /httpRequests/
 # Datasource local storage ignored files
 /dataSources/

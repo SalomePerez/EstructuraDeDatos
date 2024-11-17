@@ -1,9 +1,5 @@
 package edu.co.uniquindio.Modelo.EstructuraDeDatos;
 
-import java.util.Iterator;
-import java.util.Spliterator;
-import java.util.function.Consumer;
-
 /**
  * Clase que implementa una lista enlazada simple.
  *

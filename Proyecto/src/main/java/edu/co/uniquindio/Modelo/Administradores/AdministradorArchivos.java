@@ -1,9 +1,10 @@
 package edu.co.uniquindio.Modelo.Administradores;
 
-import java.io.*;
-
-import edu.co.uniquindio.Modelo.Principales.*;
 import edu.co.uniquindio.Modelo.EstructuraDeDatos.ListaEnlazada;
+import edu.co.uniquindio.Modelo.Principales.Proceso;
+import edu.co.uniquindio.Modelo.Principales.Usuario;
+
+import java.io.*;
 
 public class AdministradorArchivos {
     private static final String RUTA_USUARIOS = "datos/usuarios.dat";

@@ -1,9 +1,9 @@
 package edu.co.uniquindio.Modelo.Administradores;
 
+import edu.co.uniquindio.Controlador.NotificacionControlador;
 import edu.co.uniquindio.Modelo.EstructuraDeDatos.Cola;
 import edu.co.uniquindio.Modelo.EstructuraDeDatos.ListaEnlazada;
 import edu.co.uniquindio.Modelo.Principales.Actividad;
-import edu.co.uniquindio.Controlador.NotificacionControlador;
 import edu.co.uniquindio.Modelo.Principales.Proceso;
 import edu.co.uniquindio.Modelo.Principales.Tarea;
 
