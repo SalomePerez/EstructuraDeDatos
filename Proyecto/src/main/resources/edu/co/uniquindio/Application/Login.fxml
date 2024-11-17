@@ -120,6 +120,12 @@
                                         <Image url="@icono.png"/>
                                     </image>
                                 </ImageView>
+                                <ImageView fitHeight="29.0" fitWidth="29.0" layoutX="41.0" layoutY="236.0"
+                                           pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@candado.jpg"/>
+                                    </image>
+                                </ImageView>
                             </children>
                         </AnchorPane>
                     </items>
