@@ -1,4 +1,4 @@
-module edu.co.uniquindio.proyecto {
+module edu.co.uniquindio.Proyecto {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.web;
@@ -14,5 +14,7 @@ module edu.co.uniquindio.proyecto {
     requires jakarta.mail;
     requires org.apache.poi.ooxml;
     opens edu.co.uniquindio.Application to javafx.fxml;
-    exports edu.co.uniquindio.Application;
+    exports edu.co.uniquindio.Application to javafx.fxml;
+
+
 }

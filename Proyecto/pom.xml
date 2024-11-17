@@ -137,7 +137,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>edu.co.uniquindio.proyecto/edu.co.uniquindio.Application.HelloApplication
+                            <mainClass>edu.co.uniquindio.proyecto/edu.co.uniquindio.Application.App
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
