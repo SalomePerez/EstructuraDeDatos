@@ -14,28 +14,41 @@
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.co.uniquindio.Controllers.ControladorLogin"
             prefHeight="502.0" prefWidth="716.0">
     <children>
-        <TitledPane prefHeight="503.0" prefWidth="720.0">
+        <TitledPane prefHeight="100%" prefWidth="100%">
             <content>
-                <SplitPane dividerPositions="0.47216035634743875" prefHeight="160.0" prefWidth="200.0">
+                <SplitPane dividerPositions="0.47216035634743875" prefHeight="100%" prefWidth="100%">
                     <items>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                        <!-- Primer panel con fondo -->
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100%" prefWidth="50%">
                             <children>
-                                <ImageView fx:id="fondo2" fitHeight="515.0" fitWidth="620.0" layoutX="1.0" layoutY="2.0"
-                                           pickOnBounds="true" preserveRatio="true">
+                                <ImageView fx:id="fondo2" fitHeight="100%" fitWidth="100%" pickOnBounds="true"
+                                           preserveRatio="true">
                                     <image>
                                         <Image url="@fondo2.png"/>
                                     </image>
                                 </ImageView>
                             </children>
                         </AnchorPane>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="517.0" prefWidth="169.0">
+
+                        <!-- Segundo panel con formulario de login -->
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100%" prefWidth="50%">
                             <children>
-                                <ImageView fx:id="fondo1" fitHeight="620.0" fitWidth="720.0" layoutX="2.0"
-                                           layoutY="-6.0" pickOnBounds="true" preserveRatio="true">
+                                <ImageView fx:id="fondo1" fitHeight="100%" fitWidth="100%" pickOnBounds="true"
+                                           preserveRatio="true">
                                     <image>
                                         <Image url="@fondo.jpg"/>
                                     </image>
                                 </ImageView>
+
+                                <!-- Título de la sesión -->
+                                <Label alignment="CENTER" contentDisplay="CENTER" layoutX="84.0" layoutY="57.0"
+                                       prefHeight="30.0" prefWidth="208.0" text="INICIAR SESIÓN" textFill="#121514">
+                                    <font>
+                                        <Font name="Georgia" size="24.0"/>
+                                    </font>
+                                </Label>
+
+                                <!-- Campo de texto para usuario -->
                                 <TextField fx:id="textUsuario" alignment="CENTER" layoutX="76.0" layoutY="165.0"
                                            prefHeight="26.0" prefWidth="208.0" style="-fx-background-color: grey;"
                                            text="Usuario">
@@ -43,62 +56,50 @@
                                         <Font name="Berlin Sans FB Bold" size="14.0"/>
                                     </font>
                                 </TextField>
-                                <Label alignment="CENTER" contentDisplay="CENTER" layoutX="84.0" layoutY="57.0"
-                                       prefHeight="30.0" prefWidth="208.0" text="INICIAR SESIÓN" textFill="#121514">
-                                    <font>
-                                        <Font name="Georgia" size="24.0"/>
-                                    </font>
-                                </Label>
-                                <Button fx:id="bntIngresar"
-                                        id="bntIngresar"
-                                        alignment="CENTER"
-                                        contentDisplay="CENTER"
-                                        layoutX="213.0"
-                                        layoutY="384.0"
-                                        mnemonicParsing="false"
-                                        prefHeight="30.4"
-                                        prefWidth="82.4"
-                                        style="-fx-background-color: white; -fx-cursor: hand;"
-                                        onMouseEntered="#handleButtonHover"
-                                        onMouseExited="#handleButtonExit"
-                                        text="Ingresar">
-                                    <font>
-                                        <Font name="Berlin Sans FB" size="14.0"/>
-                                    </font>
-                                </Button>
 
-                                <Button fx:id="bntRegistrar"
-                                        id="bntRegistrar"
-                                        alignment="CENTER"
-                                        contentDisplay="CENTER"
-                                        layoutX="76.0"
-                                        layoutY="384.0"
-                                        mnemonicParsing="false"
-                                        style="-fx-background-color: white; -fx-cursor: hand;"
-                                        onMouseEntered="#handleButtonHover"
-                                        onMouseExited="#handleButtonExit"
-                                        text="Registrarse">
-                                    <font>
-                                        <Font name="Berlin Sans FB" size="14.0"/>
-                                    </font>
-                                </Button>
-                                <Label fx:id="textRecuperar" layoutX="205.0" layoutY="307.0"
-                                       text="Olvide mi contraseña">
-                                    <font>
-                                        <Font name="Berlin Sans FB Demi Bold" size="10.0"/>
-                                    </font>
-                                </Label>
+                                <!-- Campo de contraseña -->
+                                <PasswordField fx:id="textContrasenia" alignment="CENTER" layoutX="76.0" layoutY="237.0"
+                                               prefHeight="26.0" prefWidth="210.0" style="-fx-background-color: grey;"
+                                               text="Contraseña"/>
+
+                                <!-- Checkbox para recordar usuario -->
                                 <CheckBox fx:id="box1" layoutX="33.0" layoutY="300.0" mnemonicParsing="false"
                                           text="Recordar Usuario">
                                     <font>
                                         <Font name="Berlin Sans FB" size="10.0"/>
                                     </font>
                                 </CheckBox>
-                                <PasswordField fx:id="textContrasenia" alignment="CENTER" layoutX="76.0" layoutY="237.0"
-                                               prefHeight="26.0" prefWidth="210.0" style="-fx-background-color: grey;"
-                                               text="Contraseña"/>
-                            </children>
 
+                                <!-- Enlace para recuperar contraseña -->
+                                <Label fx:id="textRecuperar" layoutX="205.0" layoutY="307.0"
+                                       text="Olvide mi contraseña">
+                                    <font>
+                                        <Font name="Berlin Sans FB Demi Bold" size="10.0"/>
+                                    </font>
+                                </Label>
+
+                                <!-- Botón de ingresar -->
+                                <Button fx:id="bntIngresar" alignment="CENTER" contentDisplay="CENTER" layoutX="213.0"
+                                        layoutY="384.0" mnemonicParsing="false" prefHeight="30.4" prefWidth="82.4"
+                                        style="-fx-background-color: white; -fx-cursor: hand;"
+                                        onMouseEntered="#handleButtonHover"
+                                        onMouseExited="#handleButtonExit" text="Ingresar">
+                                    <font>
+                                        <Font name="Berlin Sans FB" size="14.0"/>
+                                    </font>
+                                </Button>
+
+                                <!-- Botón de registrarse -->
+                                <Button fx:id="bntRegistrar" alignment="CENTER" contentDisplay="CENTER" layoutX="76.0"
+                                        layoutY="384.0" mnemonicParsing="false"
+                                        style="-fx-background-color: white; -fx-cursor: hand;"
+                                        onMouseEntered="#handleButtonHover" onMouseExited="#handleButtonExit"
+                                        text="Registrarse">
+                                    <font>
+                                        <Font name="Berlin Sans FB" size="14.0"/>
+                                    </font>
+                                </Button>
+                            </children>
                         </AnchorPane>
                     </items>
                 </SplitPane>

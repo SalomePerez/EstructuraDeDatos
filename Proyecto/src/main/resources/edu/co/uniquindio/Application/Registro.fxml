@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="422.0" prefWidth="536.0"
+            xmlns="http://javafx.com/javafx/23.0.1" fx:controller="edu.co.uniquindio.Controllers.ControladorRegistro">
+    <children>
+        <ImageView fitHeight="379.0" fitWidth="670.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@fondo.jpg"/>
+            </image>
+        </ImageView>
+        <Pane layoutX="63.0" layoutY="32.0" prefHeight="366.0" prefWidth="411.0" style="-fx-background-color: white;">
+            <children>
+                <Label alignment="CENTER" layoutX="137.0" layoutY="14.0" text="REGISTRO">
+                    <font>
+                        <Font name="Georgia Bold" size="24.0"/>
+                    </font>
+                </Label>
+                <Label layoutX="42.0" layoutY="70.0" text="Nombre">
+                    <font>
+                        <Font name="Berlin Sans FB" size="14.0"/>
+                    </font>
+                </Label>
+                <Label layoutX="42.0" layoutY="119.0" text="Correo">
+                    <font>
+                        <Font name="Berlin Sans FB" size="14.0"/>
+                    </font>
+                </Label>
+                <Label layoutX="42.0" layoutY="175.0" text="Celular">
+                    <font>
+                        <Font name="Berlin Sans FB" size="14.0"/>
+                    </font>
+                </Label>
+                <Label layoutX="42.0" layoutY="228.0" text="Contraseña">
+                    <font>
+                        <Font name="Berlin Sans FB" size="14.0"/>
+                    </font>
+                </Label>
+                <TextField fx:id="textNombre" layoutX="116.0" layoutY="66.0" prefHeight="25.0" prefWidth="253.0"
+                           promptText="Nombre Completo"/>
+                <TextField fx:id="textCorreo" layoutX="116.0" layoutY="115.0" prefHeight="25.0" prefWidth="253.0"
+                           promptText="Correo Electrónico"/>
+                <TextField fx:id="textCelular" layoutX="116.0" layoutY="171.0" prefHeight="25.0" prefWidth="253.0"
+                           promptText="Número Teléfono"/>
+                <TextField fx:id="textContraseniaRegistro" layoutX="116.0" layoutY="224.0" prefHeight="25.0"
+                           prefWidth="253.0" promptText="Contraseña"/>
+                <Button fx:id="btnRegistrarse" layoutX="89.0" layoutY="302.0" prefHeight="25.0" prefWidth="85.0"
+                        text="Registrarse"/>
+                <Button fx:id="btnVolverLogin" layoutX="225.0" layoutY="302.0" text="Inicio de Sesión"/>
+            </children>
+        </Pane>
+    </children>
+</AnchorPane>

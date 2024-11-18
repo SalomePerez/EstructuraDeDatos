@@ -1,7 +1,9 @@
 package edu.co.uniquindio.Controllers;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.scene.control.Alert.AlertType;
@@ -9,6 +11,7 @@ import edu.co.uniquindio.Model.Administradores.AdministradorArchivos;
 import edu.co.uniquindio.Model.EstructuraDeDatos.ListaEnlazada;
 import edu.co.uniquindio.Model.Principales.Usuario;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -124,13 +127,37 @@ public class ControladorLogin implements Initializable {
     }
 
     private void abrirVentanaRegistro() {
-        // Implementar la lógica para abrir la ventana de registro
-        mostrarAlerta("Registro", "Función de registro en desarrollo", AlertType.INFORMATION);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/edu/co/uniquindio/Application/Registro.fxml"));
+            Scene registroScene = new Scene(loader.load());
+
+            // Obtener la ventana (Stage) actual y cambiar la escena
+            Stage stage = (Stage) bntRegistrar.getScene().getWindow();
+            stage.setScene(registroScene);
+            stage.show();
+        } catch (IOException e) {
+            mostrarAlerta("Error", "No se pudo abrir la ventana de registro.", AlertType.ERROR);
+            e.printStackTrace();
+        }
     }
 
     private void abrirVentanaRecuperacion() {
-        // Implementar la lógica para abrir la ventana de recuperación de contraseña
-        mostrarAlerta("Recuperación", "Función de recuperación en desarrollo", AlertType.INFORMATION);
+        // Mostrar mensaje indicando que se enviará un código
+        mostrarAlerta("Recuperación", "Se enviará un código de recuperación a su correo.", AlertType.INFORMATION);
+
+        try {
+            // Intentar cargar la ventana de recuperación
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/edu/co/uniquindio/vista/recuperacion.fxml"));
+            Scene recuperacionScene = new Scene(loader.load());
+
+            // Obtener la ventana (Stage) actual y cambiar la escena
+            Stage stage = (Stage) textRecuperar.getScene().getWindow();
+            stage.setScene(recuperacionScene);
+            stage.show();
+        } catch (IOException e) {
+            mostrarAlerta("Error", "No se pudo abrir la ventana de recuperación.", AlertType.ERROR);
+            e.printStackTrace();
+        }
     }
 
     private void guardarPreferenciasUsuario() {
