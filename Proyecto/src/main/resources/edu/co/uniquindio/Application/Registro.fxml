@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -50,11 +51,11 @@
                            promptText="Correo Electrónico"/>
                 <TextField fx:id="textCelular" layoutX="116.0" layoutY="171.0" prefHeight="25.0" prefWidth="253.0"
                            promptText="Número Teléfono"/>
-                <TextField fx:id="textContraseniaRegistro" layoutX="116.0" layoutY="224.0" prefHeight="25.0"
-                           prefWidth="253.0" promptText="Contraseña"/>
                 <Button fx:id="btnRegistrarse" layoutX="89.0" layoutY="302.0" prefHeight="25.0" prefWidth="85.0"
                         text="Registrarse"/>
                 <Button fx:id="btnVolverLogin" layoutX="225.0" layoutY="302.0" text="Inicio de Sesión"/>
+                <PasswordField fx:id="textContraseniaRegistro" layoutX="116.0" layoutY="224.0" prefHeight="25.0"
+                               prefWidth="253.0"/>
             </children>
         </Pane>
     </children>
