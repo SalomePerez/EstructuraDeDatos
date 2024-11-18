@@ -49,10 +49,35 @@
                                         <Font name="Algerian" size="24.0"/>
                                     </font>
                                 </Label>
-                                <Button fx:id="bntIngresar" alignment="CENTER" contentDisplay="CENTER" layoutX="213.0"
-                                        layoutY="384.0" mnemonicParsing="false" prefHeight="30.4" prefWidth="82.4"
-                                        style="-fx-background-color: white;" text="Ingresar" textAlignment="CENTER"
-                                        textFill="#0f0e0e" textOverrun="CENTER_ELLIPSIS">
+                                <Button fx:id="bntIngresar"
+                                        id="bntIngresar"
+                                        alignment="CENTER"
+                                        contentDisplay="CENTER"
+                                        layoutX="213.0"
+                                        layoutY="384.0"
+                                        mnemonicParsing="false"
+                                        prefHeight="30.4"
+                                        prefWidth="82.4"
+                                        style="-fx-background-color: white; -fx-cursor: hand;"
+                                        onMouseEntered="#handleButtonHover"
+                                        onMouseExited="#handleButtonExit"
+                                        text="Ingresar">
+                                    <font>
+                                        <Font name="Berlin Sans FB" size="14.0"/>
+                                    </font>
+                                </Button>
+
+                                <Button fx:id="bntRegistrar"
+                                        id="bntRegistrar"
+                                        alignment="CENTER"
+                                        contentDisplay="CENTER"
+                                        layoutX="76.0"
+                                        layoutY="384.0"
+                                        mnemonicParsing="false"
+                                        style="-fx-background-color: white; -fx-cursor: hand;"
+                                        onMouseEntered="#handleButtonHover"
+                                        onMouseExited="#handleButtonExit"
+                                        text="Registrarse">
                                     <font>
                                         <Font name="Berlin Sans FB" size="14.0"/>
                                     </font>
@@ -69,18 +94,11 @@
                                         <Font name="Berlin Sans FB" size="10.0"/>
                                     </font>
                                 </CheckBox>
-                                <Button fx:id="bntRegistrar" alignment="CENTER" contentDisplay="CENTER" layoutX="76.0"
-                                        layoutY="384.0" mnemonicParsing="false" style="-fx-background-color: white;"
-                                        text="Registrarse" textAlignment="CENTER" textFill="#0f0e0e"
-                                        textOverrun="CENTER_ELLIPSIS">
-                                    <font>
-                                        <Font name="Berlin Sans FB" size="14.0"/>
-                                    </font>
-                                </Button>
                                 <PasswordField fx:id="textContrasenia" alignment="CENTER" layoutX="76.0" layoutY="237.0"
                                                prefHeight="26.0" prefWidth="210.0" style="-fx-background-color: grey;"
                                                text="Contraseña"/>
                             </children>
+
                         </AnchorPane>
                     </items>
                 </SplitPane>

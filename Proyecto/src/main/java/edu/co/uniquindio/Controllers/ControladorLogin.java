@@ -1,138 +1,52 @@
 package edu.co.uniquindio.Controllers;
-
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
-import javafx.stage.Stage;
-import javafx.event.ActionEvent;
-import javafx.scene.Scene;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import edu.co.uniquindio.Model.Administradores.AdministradorArchivos;
 import edu.co.uniquindio.Model.EstructuraDeDatos.ListaEnlazada;
 import edu.co.uniquindio.Model.Principales.Usuario;
-import edu.co.uniquindio.Model.Administradores.AdministradorArchivos;
+import javafx.scene.input.MouseEvent;
 
 public class ControladorLogin {
-    // FXML injected controls
-    @FXML
-    private TextField textUsuario;
-
-    @FXML
-    private PasswordField textContrasenia;
-
     @FXML
     private Button bntIngresar;
 
     @FXML
     private Button bntRegistrar;
 
-    @FXML
-    private Label textRecuperar;
+    private ListaEnlazada<Usuario> usuarios; // Lista de usuarios
+    private Usuario usuarioActual; // Usuario actualmente autenticado
 
-    @FXML
-    private CheckBox box1;
-
-    @FXML
-    private ImageView fondo1, fondo2;
-
-    // Existing fields
-    private ListaEnlazada<Usuario> usuarios;
-    private Usuario usuarioActual;
-
-    // Initialize method called by FXML loader
-    @FXML
-    public void initialize() {
+    // Constructor
+    public ControladorLogin() {
         usuarios = new ListaEnlazada<>();
         cargarUsuarios();
-
-        // Configure event handlers
-        bntIngresar.setOnAction(event -> handleIngresar());
-        bntRegistrar.setOnAction(event -> handleRegistrar());
-        textRecuperar.setOnMouseClicked(event -> handleRecuperarContrasenia());
-
-        // Clear default text on click
-        textUsuario.setOnMouseClicked(event -> {
-            if (textUsuario.getText().equals("Usuario")) {
-                textUsuario.clear();
-            }
-        });
-
-        textContrasenia.setOnMouseClicked(event -> {
-            if (textContrasenia.getText().equals("Contraseña")) {
-                textContrasenia.clear();
-            }
-        });
     }
 
     @FXML
-    private void handleIngresar() {
-        String identificacion = textUsuario.getText();
-        String contrasenia = textContrasenia.getText();
-
-        if (identificacion.isEmpty() || contrasenia.isEmpty() ||
-                identificacion.equals("Usuario") || contrasenia.equals("Contraseña")) {
-            mostrarAlerta("Error", "Por favor complete todos los campos correctamente.");
-            return;
-        }
-
-        if (autenticarUsuario(identificacion, contrasenia)) {
-            mostrarAlerta("Éxito", "¡Inicio de sesión exitoso!");
-            abrirVentanaPrincipal();
-        } else {
-            mostrarAlerta("Error", "Usuario o contraseña incorrectos.");
+    private void handleButtonHover(javafx.scene.input.MouseEvent event) {
+        Button button = (Button) event.getSource();
+        if (button.getId().equals("bntIngresar")) {
+            button.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-cursor: hand; -fx-scale-x: 1.1; -fx-scale-y: 1.1;");
+        } else if (button.getId().equals("bntRegistrar")) {
+            button.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white; -fx-cursor: hand; -fx-scale-x: 1.1; -fx-scale-y: 1.1;");
         }
     }
 
     @FXML
-    private void handleRegistrar() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/edu/co/uniquindio/Views/registro.fxml"));
-            Parent root = loader.load();
-            Stage stage = new Stage();
-            stage.setTitle("Registro de Usuario");
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-            mostrarAlerta("Error", "No se pudo abrir la ventana de registro.");
-        }
+    private void handleButtonExit(javafx.scene.input.MouseEvent event) {
+        Button button = (Button) event.getSource();
+        button.setStyle("-fx-background-color: white; -fx-text-fill: black; -fx-cursor: hand; -fx-scale-x: 1; -fx-scale-y: 1;");
     }
 
-    private void handleRecuperarContrasenia() {
-        // Implementar lógica de recuperación de contraseña
-        mostrarAlerta("Información", "Función de recuperar contraseña no implementada aún.");
-    }
-
-    private void abrirVentanaPrincipal() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/edu/co/uniquindio/Views/principal.fxml"));
-            Parent root = loader.load();
-            Stage stage = new Stage();
-            stage.setTitle("Ventana Principal");
-            stage.setScene(new Scene(root));
-            stage.show();
-
-            // Cerrar ventana de login
-            ((Stage) bntIngresar.getScene().getWindow()).close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            mostrarAlerta("Error", "No se pudo abrir la ventana principal.");
-        }
-    }
-
-    private void mostrarAlerta(String titulo, String contenido) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(contenido);
-        alert.showAndWait();
-    }
-
-    // Los métodos existentes se mantienen igual
+    /**
+     * Carga los usuarios desde un archivo.
+     */
     private void cargarUsuarios() {
         try {
-            usuarios = AdministradorArchivos.cargarUsuarios();
+            usuarios = AdministradorArchivos.cargarUsuarios(); // Cargar usuarios desde archivo
             if (usuarios.getTamanio() == 0) {
+                // Crear un usuario por defecto si no hay usuarios
                 registrarUsuario("Admin", "1234", "admin@test.com", "admin123");
             }
         } catch (Exception e) {
@@ -140,14 +54,20 @@ public class ControladorLogin {
         }
     }
 
+    /**
+     * Guarda los cambios realizados en la lista de usuarios en un archivo.
+     */
     private void guardarCambios() {
         try {
-            AdministradorArchivos.guardarUsuarios(usuarios);
+            AdministradorArchivos.guardarUsuarios(usuarios); // Guardar usuarios en archivo
         } catch (Exception e) {
             System.out.println("Error al guardar usuarios: " + e.getMessage());
         }
     }
 
+    /**
+     * Registra un nuevo usuario en el sistema.
+     */
     public void registrarUsuario(String nombre, String identificacion, String correo, String contrasenia) {
         if (existeUsuario(identificacion)) {
             System.out.println("El usuario con esta identificación ya existe.");
@@ -155,10 +75,16 @@ public class ControladorLogin {
         }
 
         Usuario nuevoUsuario = new Usuario(nombre, identificacion, correo, contrasenia);
-        usuarios.insertar(nuevoUsuario);
-        guardarCambios();
+        usuarios.insertar(nuevoUsuario); // Agregar el nuevo usuario a la lista enlazada
+        guardarCambios(); // Guardar los cambios
     }
 
+    /**
+     * Verifica si un usuario con la identificación dada ya existe.
+     *
+     * @param identificacion Identificación a verificar.
+     * @return true si el usuario existe, false de lo contrario.
+     */
     private boolean existeUsuario(String identificacion) {
         for (int i = 0; i < usuarios.getTamanio(); i++) {
             if (usuarios.getElementoEnPosicion(i).getIdentificacion().equals(identificacion)) {
@@ -168,10 +94,16 @@ public class ControladorLogin {
         return false;
     }
 
+    /**
+     * Autentica un usuario en el sistema.
+     *
+     * @param identificacion Identificación del usuario.
+     * @param contrasenia    Contraseña del usuario.
+     * @return true si la autenticación es exitosa, false de lo contrario.
+     */
     public boolean autenticarUsuario(String identificacion, String contrasenia) {
         for (int i = 0; i < usuarios.getTamanio(); i++) {
-            if (usuarios.getElementoEnPosicion(i).getIdentificacion().equals(identificacion) &&
-                    usuarios.getElementoEnPosicion(i).getContrasenia().equals(contrasenia)) {
+            if (usuarios.getElementoEnPosicion(i).getIdentificacion().equals(identificacion) && usuarios.getElementoEnPosicion(i).getContrasenia().equals(contrasenia)) {
                 usuarioActual = usuarios.getElementoEnPosicion(i);
                 return true;
             }
@@ -179,7 +111,13 @@ public class ControladorLogin {
         return false;
     }
 
+    /**
+     * Obtiene el usuario actualmente autenticado.
+     *
+     * @return El usuario autenticado o null si no hay ningún usuario autenticado.
+     */
     public Usuario getUsuarioActual() {
         return usuarioActual;
     }
+
 }
