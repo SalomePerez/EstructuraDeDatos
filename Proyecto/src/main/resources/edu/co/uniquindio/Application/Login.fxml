@@ -46,7 +46,7 @@
                                 <Label alignment="CENTER" contentDisplay="CENTER" layoutX="84.0" layoutY="57.0"
                                        prefHeight="30.0" prefWidth="208.0" text="INICIAR SESIÓN" textFill="#121514">
                                     <font>
-                                        <Font name="Algerian" size="24.0"/>
+                                        <Font name="Georgia" size="24.0"/>
                                     </font>
                                 </Label>
                                 <Button fx:id="bntIngresar"
