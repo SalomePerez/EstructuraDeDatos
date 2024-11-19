@@ -1,5 +1,6 @@
 package edu.co.uniquindio.Model.Principales;
 
+import edu.co.uniquindio.Model.Auxiliares.TiempoProceso;
 import edu.co.uniquindio.Model.EstructuraDeDatos.Cola;
 import edu.co.uniquindio.Model.EstructuraDeDatos.ListaEnlazada;
 
@@ -7,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class Proceso {
+    private TiempoProceso tiempoDuracion;
     private static Proceso instancia;
     private String nombre; // Título del proceso
     private UUID identificador; // Identificador único del proceso
@@ -21,6 +23,16 @@ public class Proceso {
         this.fechaDeInicio = LocalDateTime.now(); // Asigna la fecha actual como fecha de inicio
     }
 
+    public Proceso(TiempoProceso tiempoDuracion) {
+        if (tiempoDuracion == null) {
+            throw new IllegalArgumentException("El tiempo de duración no puede ser nulo.");
+        }
+        this.tiempoDuracion = tiempoDuracion;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
 
     // Método para agregar una Actividad al proceso
     public void agregarActividad(Actividad actividad) {
@@ -65,6 +77,11 @@ public class Proceso {
     // Setter para cambiar la fecha de inicio del proceso
     public void establecerFechaDeInicio(LocalDateTime fechaDeInicio) {
         this.fechaDeInicio = fechaDeInicio;
+    }
+
+    // Método para obtener el tiempo de duración
+    public TiempoProceso obtenerTiempoDuracion() {
+        return tiempoDuracion;
     }
 
     @Override

@@ -13,9 +13,12 @@ module edu.co.uniquindio.proyecto {
     exports edu.co.uniquindio.Application;
     opens edu.co.uniquindio.Application to javafx.fxml;
 
-    // Si tienes más paquetes que necesitan ser accedidos por FXML, agrégalos aquí
+    // Si tienes más paquetes que necesitan ser accedidos por FXML, agrégales aquí
     exports edu.co.uniquindio.Model.Principales;
     opens edu.co.uniquindio.Model.Principales to javafx.fxml;
+
+    // Exportar el paquete de pruebas para que JUnit pueda acceder a él
+    exports edu.co.uniquindio.Pruebas to junit;  // Solo es accesible desde JUnit
 
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
@@ -28,6 +31,5 @@ module edu.co.uniquindio.proyecto {
     requires jakarta.mail;
     requires org.apache.poi.ooxml;
     requires com.jfoenix;
-
-
+    requires junit;
 }

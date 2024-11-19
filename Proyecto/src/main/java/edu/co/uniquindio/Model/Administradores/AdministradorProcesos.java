@@ -119,4 +119,34 @@ public class AdministradorProcesos {
             listaProcesos.eliminar(procesoParaEliminar);
         }
     }
+
+    /**
+     * Intercambia dos actividades con o sin sus tareas.
+     *
+     * @param actividad1 La primera actividad a intercambiar.
+     * @param actividad2 La segunda actividad a intercambiar.
+     * @param incluirTareas Si es true, se intercambian también las tareas.
+     */
+    public void intercambiarActividades(Actividad actividad1, Actividad actividad2, boolean incluirTareas) {
+        if (actividad1 == null || actividad2 == null) {
+            throw new IllegalArgumentException("Las actividades no pueden ser nulas.");
+        }
+
+        // Intercambiar nombres
+        String nombreTemp = actividad1.obtenerNombre();
+        actividad1.establecerNombre(actividad2.obtenerNombre());
+        actividad2.establecerNombre(nombreTemp);
+
+        // Intercambiar descripciones
+        String descripcionTemp = actividad1.obtenerDescripcion();
+        actividad1.establecerDescripcion(actividad2.obtenerDescripcion());
+        actividad2.establecerDescripcion(descripcionTemp);
+
+        if (incluirTareas) {
+            // Intercambiar tareas
+            var tareasTemp = actividad1.obtenerTareas();
+            actividad1.establecerTareas(actividad2.obtenerTareas());
+            actividad2.establecerTareas(tareasTemp);
+        }
+    }
 }

@@ -158,4 +158,48 @@ public class AdministradorTareas {
                 procesoId.toString()
         );
     }
+
+    /**
+     * Busca una tarea en la cola según su nombre.
+     *
+     * @param tareas La cola de tareas donde buscar.
+     * @param nombre El nombre de la tarea a buscar.
+     * @return La tarea encontrada, o null si no se encuentra.
+     */
+    public Tarea buscarTareaPorNombre(Cola<Tarea> tareas, String nombre) {
+        if (tareas == null || nombre == null || nombre.isEmpty()) {
+            throw new IllegalArgumentException("La cola de tareas o el nombre de la tarea no pueden ser nulos o vacíos.");
+        }
+
+        for (Tarea tarea : tareas) {
+            if (tarea.obtenerDescripcion().equals(nombre)) {
+                return tarea;
+            }
+        }
+
+        return null; // Si no se encuentra, devuelve null
+    }
+
+    /**
+     * Busca una tarea en la cola de tareas asociadas a una actividad.
+     *
+     * @param tareas La cola de tareas donde buscar.
+     * @param nombreActividad El nombre de la actividad asociada a la tarea.
+     * @return La primera tarea asociada a la actividad encontrada, o null si no se encuentra.
+     */
+    public Tarea buscarTareaDesdeActividad(Cola<Tarea> tareas, String nombreActividad) {
+        if (tareas == null || nombreActividad == null || nombreActividad.isEmpty()) {
+            throw new IllegalArgumentException("La cola de tareas o el nombre de la actividad no pueden ser nulos o vacíos.");
+        }
+
+        for (Tarea tarea : tareas) {
+            // Asume que el nombre de la actividad está incluido como parte de la descripción o se asocia de alguna forma
+            if (tarea.obtenerDescripcion().contains(nombreActividad)) {
+                return tarea;
+            }
+        }
+
+        return null; // Si no se encuentra, devuelve null
+    }
+
 }
