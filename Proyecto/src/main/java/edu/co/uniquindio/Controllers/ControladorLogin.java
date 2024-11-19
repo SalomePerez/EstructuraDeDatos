@@ -128,7 +128,7 @@ public class ControladorLogin implements Initializable {
 
     private void abrirVentanaRegistro() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/edu/co/uniquindio/Application/Registro.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/edu/co/uniquindio/Application/vista/Registro.fxml"));
             Scene registroScene = new Scene(loader.load());
 
             // Obtener la ventana (Stage) actual y cambiar la escena

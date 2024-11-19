@@ -1,12 +1,14 @@
 package edu.co.uniquindio.Model.Principales;
 
+import edu.co.uniquindio.Model.EstructuraDeDatos.Cola;
 import edu.co.uniquindio.Model.EstructuraDeDatos.ListaEnlazada;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class Proceso {
-    private static Proceso instancia;    private String nombre; // Título del proceso
+    private static Proceso instancia;
+    private String nombre; // Título del proceso
     private UUID identificador; // Identificador único del proceso
     private ListaEnlazada<Actividad> listaDeActividades; // Lista de Actividads asociadas al proceso
     private LocalDateTime fechaDeInicio; // Fecha de inicio del proyecto
@@ -63,5 +65,48 @@ public class Proceso {
     // Setter para cambiar la fecha de inicio del proceso
     public void establecerFechaDeInicio(LocalDateTime fechaDeInicio) {
         this.fechaDeInicio = fechaDeInicio;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Proceso: ").append(this.obtenerTitulo()).append("\n");
+        sb.append("Actividades:\n");
+
+        for (int i = 0; i < obtenerlistaDeActividades().getTamanio(); i++) {
+            Actividad actividad = obtenerlistaDeActividades().getElementoEnPosicion(i);
+            sb.append(i + 1).append(". ").append(actividad.obtenerNombre()).append("\n");
+            sb.append("   Descripción: ").append(actividad.obtenerDescripcion()).append("\n");
+            sb.append("   Obligatoria: ").append(actividad.esObligatoria()).append("\n");
+
+            // Agregar información de conexiones
+            if (actividad.obtenerActividadAnterior() != null) {
+                sb.append("   Anterior: ").append(actividad.obtenerActividadAnterior().obtenerNombre()).append("\n");
+            }
+            if (actividad.obtenerActividadSiguiente() != null) {
+                sb.append("   Siguiente: ").append(actividad.obtenerActividadSiguiente().obtenerNombre()).append("\n");
+            }
+
+            // Agregar información de las tareas
+            sb.append("   Tareas:\n");
+            Cola<Tarea> tareas = actividad.obtenerTareas();
+            if (tareas.estaVacia()) {
+                sb.append("      No hay tareas definidas\n");
+            } else {
+                int numTarea = 1;
+                for (Tarea tarea : tareas) {
+                    sb.append("      ").append(numTarea).append(". ")
+                            .append(tarea.obtenerNombre()).append("\n")
+                            .append("         Descripción: ").append(tarea.obtenerDescripcion()).append("\n")
+                            .append("         Duración: ").append(tarea.obtenerDuracion()).append(" minutos\n")
+                            .append("         Obligatoria: ").append(tarea.esObligatoria()).append("\n")
+                            .append("         Estado: ").append(tarea.estaCompletada() ? "Completada" : "Pendiente").append("\n");
+                    numTarea++;
+                }
+            }
+            sb.append("\n");
+        }
+
+        return sb.toString();
     }
 }

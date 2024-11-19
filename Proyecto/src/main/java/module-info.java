@@ -1,5 +1,4 @@
 module edu.co.uniquindio.proyecto {
-    requires javafx.controls;
     requires javafx.fxml;
     requires javafx.web;
     requires javafx.media;
@@ -28,6 +27,8 @@ module edu.co.uniquindio.proyecto {
     requires okhttp3;
     requires jakarta.mail;
     requires org.apache.poi.ooxml;
+    requires com.jfoenix;
+
 
 
 }

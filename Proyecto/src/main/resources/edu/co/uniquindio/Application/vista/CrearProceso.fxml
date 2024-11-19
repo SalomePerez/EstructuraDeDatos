@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="624.0" prefWidth="746.0" stylesheets="@../styles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.co.uniquindio.Controllers.ControladorCrearProcesos">
+
+    <ScrollPane fitToWidth="true" styleClass="panel_scroll_informacion" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <VBox spacing="20" styleClass="main-container">
+            <!-- Cabecera -->
+            <VBox styleClass="header-container">
+                <Label styleClass="view-title" text="Crear Nuevo Proceso">
+                    <font>
+                        <Font name="Candara Bold" size="30.0" />
+                    </font>
+                </Label>
+                <Label styleClass="view-subtitle" text="Define el proceso, sus actividades y tareas asociadas">
+                    <font>
+                        <Font name="Candara" size="13.0" />
+                    </font>
+                </Label>
+            </VBox>
+
+            <!-- Formulario Principal -->
+            <VBox spacing="20" styleClass="form-container">
+                <!-- Sección Proceso -->
+                <VBox spacing="10" styleClass="section-container">
+                    <Label styleClass="section-title" text="Información del Proceso">
+                        <font>
+                            <Font name="Candara Bold" size="20.0" />
+                        </font>
+                    </Label>
+                    <JFXTextField fx:id="txtNombreProceso" labelFloat="true" promptText="Nombre del Proceso" styleClass="form-field" />
+                </VBox>
+
+                <!-- Sección Actividades -->
+                <VBox spacing="10" styleClass="section-container">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label styleClass="section-title" text="Actividades">
+                            <font>
+                                <Font name="Candara Bold" size="20.0" />
+                            </font>
+                        </Label>
+                        <JFXButton fx:id="btnToggleActividades" onAction="#toggleActividades" styleClass="add-button" text="+" />
+                    </HBox>
+
+                    <VBox fx:id="actividadesContent" spacing="10">
+                        <HBox spacing="10">
+                            <JFXTextField fx:id="txtNombreActividad" labelFloat="true" promptText="Nombre de la Actividad" styleClass="form-field" HBox.hgrow="ALWAYS" />
+                            <JFXTextArea fx:id="txtDescripcionActividad" labelFloat="true" promptText="Descripción" styleClass="form-field" HBox.hgrow="ALWAYS" />
+                            <JFXCheckBox fx:id="chkActividadObligatoria" text="Obligatoria" />
+                        </HBox>
+
+                        <HBox spacing="10">
+                            <JFXComboBox fx:id="cmbPosicionActividad" promptText="Posición de inserción" styleClass="form-field" />
+                            <JFXTextField fx:id="txtActividadPrevia" labelFloat="true" promptText="Actividad previa (opcional)" styleClass="form-field" />
+                            <JFXButton fx:id="btnAgregarActividad" onAction="#agregarActividad" styleClass="add-button" text="Agregar Actividad" />
+                        </HBox>
+                    </VBox>
+                </VBox>
+
+                 <!-- Sección Tareas -->
+                <VBox spacing="10" styleClass="section-container">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label styleClass="section-title" text="Tareas">
+                            <font>
+                                <Font name="Candara Bold" size="20.0" />
+                            </font>
+                        </Label>
+                        <JFXButton fx:id="btnToggleTareas" onAction="#toggleTareas" styleClass="add-button" text="+" />
+                    </HBox>
+
+                    <VBox fx:id="tareasContent" spacing="10">
+                        <!-- Nuevo ComboBox para seleccionar actividad -->
+                        <HBox spacing="10">
+                            <JFXComboBox fx:id="cmbActividades" promptText="Seleccionar Actividad" styleClass="form-field" HBox.hgrow="ALWAYS" />
+                        </HBox>
+
+                        <HBox spacing="10">
+                            <JFXTextField fx:id="txtNombreTarea" labelFloat="true" promptText="Nombre de la Tarea" styleClass="form-field" HBox.hgrow="ALWAYS" />
+                            <JFXTextArea fx:id="txtDescripcionTarea" labelFloat="true" promptText="Descripción de la Tarea" styleClass="form-field" HBox.hgrow="ALWAYS" />
+                            <JFXCheckBox fx:id="chkTareaObligatoria" text="Obligatoria" />
+                            <JFXTextField fx:id="txtDuracionTarea" labelFloat="true" promptText="Duración (minutos)" styleClass="form-field" />
+                        </HBox>
+
+                        <HBox spacing="10">
+                            <JFXTextField fx:id="txtPosicionTarea" labelFloat="true" promptText="Posición (opcional)" styleClass="form-field" />
+                            <JFXButton fx:id="btnAgregarTarea" onAction="#agregarTarea" styleClass="add-button" text="Agregar Tarea" />
+                        </HBox>
+                    </VBox>
+                </VBox>
+
+                <!-- Botones de Acción -->
+                <HBox alignment="CENTER_RIGHT" spacing="10">
+                    <JFXButton fx:id="btnCancelar" onAction="#cancelar" styleClass="cancel-button" text="Cancelar" />
+                    <JFXButton fx:id="btnGuardar" onAction="#guardarProceso" styleClass="save-button" text="Guardar Proceso" />
+                </HBox>
+            </VBox>
+        </VBox>
+    </ScrollPane>
+
+</AnchorPane>

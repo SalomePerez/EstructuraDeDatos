@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Font?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="edu.co.uniquindio.Application.vistas.AdminActividad"
+            prefHeight="624.0" prefWidth="746.0"
+            AnchorPane.topAnchor="0.0"
+            AnchorPane.rightAnchor="0.0"
+            AnchorPane.bottomAnchor="0.0"
+            AnchorPane.leftAnchor="0.0">
+
+    <!-- VBox principal que se adaptará al espacio disponible -->
+    <VBox spacing="10" AnchorPane.topAnchor="0.0"
+          AnchorPane.rightAnchor="0.0"
+          AnchorPane.bottomAnchor="0.0"
+          AnchorPane.leftAnchor="0.0">
+
+        <!-- Cabecera de la vista -->
+        <VBox spacing="5" styleClass="header-container">
+            <Label text="Crear Proceso" styleClass="view-title">
+                <font>
+                    <Font name="Candara Bold" size="30.0" />
+                </font>
+            </Label>
+            <Label text="Aquí puedes crear nuevos procesos para tu sistema" styleClass="view-subtitle">
+                <font>
+                    <Font name="Candara" size="13.0" />
+                </font>
+            </Label>
+        </VBox>
+
+        <!-- Contenido principal que se adaptará al espacio restante -->
+        <VBox VBox.vgrow="ALWAYS" styleClass="content-container"
+              spacing="15" style="-fx-padding: 20;">
+            <!-- Aquí va el contenido específico de cada vista -->
+        </VBox>
+
+    </VBox>
+</AnchorPane>

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="660.0" prefWidth="1033.0" styleClass="root" stylesheets="@../styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.co.uniquindio.Controllers.ControladorDashboard">
+   <children>
+      <VBox prefHeight="573.0" prefWidth="263.0">
+         <children>
+            <AnchorPane fx:id="side_ankerpane" prefHeight="619.0" prefWidth="291.0" styleClass="side_ankerpane" stylesheets="@../styles.css">
+               <children>
+                  <Pane fx:id="inner_panel" layoutX="17.0" layoutY="30.0" prefHeight="57.0" prefWidth="237.0" styleClass="inner_panel" stylesheets="@../styles.css">
+                     <children>
+                        <ImageView fitHeight="39.0" fitWidth="40.0" layoutX="17.0" layoutY="11.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../imagenes/market_13924141.png" />
+                           </image>
+                        </ImageView>
+                        <!-- Agregamos el Label para el nombre del usuario -->
+                        <Label fx:id="lblUserName" layoutX="65.0" layoutY="15.0" styleClass="user-name-label" textFill="WHITE">
+                           <font>
+                              <Font name="Candara Bold" size="16.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lblUserRole" layoutX="65.0" layoutY="35.0" styleClass="user-role-label" textFill="WHITE">
+                           <font>
+                              <Font name="Candara" size="12.0" />
+                           </font>
+                        </Label>
+                        <Pane fx:id="most_inner_pane" layoutX="192.0" prefHeight="57.0" prefWidth="32.0" styleClass="most_inner_pane" stylesheets="@../styles.css">
+                           <children>
+                              <ImageView fitHeight="25.0" fitWidth="26.0" layoutX="6.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../imagenes/menu-puntos-vertical.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </Pane>
+                     </children></Pane>
+                  <JFXButton fx:id="btn_dashboard" layoutX="14.0" layoutY="126.0" onAction="#menu" prefHeight="34.0" prefWidth="237.0" styleClass="btn_procesos" stylesheets="@../styles.css" text="Dashboard" textFill="WHITE">
+                     <graphic>
+                        <ImageView fitHeight="29.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../imagenes/panel-de-control.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </JFXButton>
+                  <JFXButton fx:id="btn_admin_procesos" layoutX="14.0" layoutY="266.0" onAction="#menu" prefHeight="39.0" prefWidth="237.0" styleClass="btn_procesos" stylesheets="@../styles.css" text="Administrador Procesos" textFill="WHITE">
+                     <graphic>
+                        <ImageView fitHeight="29.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../imagenes/alt-administrador.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </JFXButton>
+                  <JFXButton fx:id="btn_admin_actividad" layoutX="17.0" layoutY="332.0" onAction="#menu" prefHeight="39.0" prefWidth="237.0" styleClass="btn_procesos" stylesheets="@../styles.css" text="Administrador Actividad" textFill="WHITE">
+                     <graphic>
+                        <ImageView fitHeight="29.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../imagenes/signo-de-persona.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </JFXButton>
+                  <JFXButton fx:id="btn_admin_tarea" layoutX="13.0" layoutY="398.0" onAction="#menu" prefHeight="39.0" prefWidth="237.0" styleClass="btn_procesos" stylesheets="@../styles.css" text="Administrador Tareas" textFill="WHITE">
+                     <graphic>
+                        <ImageView fitHeight="29.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../imagenes/verificacion-de-lista.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </JFXButton>
+                  <JFXButton fx:id="btn_crear_proceso" layoutX="14.0" layoutY="199.0" onAction="#menu" prefHeight="34.0" prefWidth="237.0" styleClass="btn_procesos" stylesheets="@../styles.css" text="Crear Procesos" textFill="WHITE">
+                     <graphic>
+                        <ImageView fitHeight="29.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../imagenes/configuracion-alternativa-del-flujo-de.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </JFXButton>
+                  <Pane layoutX="7.0" layoutY="437.0" prefHeight="146.0" prefWidth="249.0">
+                     <children>
+                        <ImageView fitHeight="127.0" fitWidth="134.0" layoutX="61.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../imagenes/buyer.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </Pane>
+               </children>
+            </AnchorPane>
+         </children>
+      </VBox>
+      <Pane fx:id="panel_principal" nodeOrientation="LEFT_TO_RIGHT" prefHeight="624.0" prefWidth="746.0">
+         <children>
+            <Pane fx:id="panel_contenido" prefHeight="52.0" prefWidth="747.0">
+               <children>
+                  <JFXButton alignment="CENTER" contentDisplay="GRAPHIC_ONLY" layoutX="637.0" layoutY="-4.0" prefHeight="52.0" prefWidth="107.0" text="Button" />
+                  <ImageView fitHeight="34.0" fitWidth="34.0" layoutX="667.0" layoutY="11.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../imagenes/operacion.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Pane>
+            <Label layoutX="14.0" layoutY="41.0" text="Bienvenido al Panel de Control ">
+               <font>
+                  <Font name="Candara Bold" size="30.0" />
+               </font>
+            </Label>
+            <Label layoutX="14.0" layoutY="78.0" text="Aqui encontraras toda la informacion de tus procesos ">
+               <font>
+                  <Font name="Candara" size="13.0" />
+               </font>
+            </Label>
+            <Pane fx:id="panel_contenedor_contenido" layoutX="18.0" layoutY="129.0" prefHeight="488.0" prefWidth="696.0">
+               <children>
+                  <Label fx:id="txt_procesos" layoutX="20.0" layoutY="14.0" prefHeight="39.0" prefWidth="194.0" text="Procesos " textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font name="Candara Bold" size="27.0" />
+                     </font>
+                  </Label>
+                  <Pane fx:id="panel_procesos" layoutX="222.0" layoutY="6.0" prefHeight="193.0" prefWidth="473.0" styleClass="panel_procesos" stylesheets="@../styles.css" />
+                  <Label fx:id="txt_actividades" layoutX="20.0" layoutY="215.0" prefHeight="39.0" prefWidth="194.0" text="Actividades" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font name="Candara Bold" size="21.0" />
+                     </font>
+                  </Label>
+                  <Pane fx:id="panel_actividades" layoutX="8.0" layoutY="263.0" prefHeight="220.0" prefWidth="329.0" styleClass="panel_procesos" stylesheets="@../styles.css" />
+                  <Label fx:id="txt_tareas" layoutX="380.0" layoutY="215.0" prefHeight="39.0" prefWidth="194.0" text="Tareas" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font name="Candara Bold" size="21.0" />
+                     </font>
+                  </Label>
+                  <Pane fx:id="panel_tareas" layoutX="369.0" layoutY="263.0" prefHeight="220.0" prefWidth="329.0" styleClass="panel_procesos" stylesheets="@../styles.css" />
+               </children>
+            </Pane>
+         </children>
+      </Pane>
+   </children>
+</HBox>

@@ -9,75 +9,71 @@ public class ListaEnlazada<T> {
     private Nodo<T> cabeza; // Nodo inicial de la lista
     private int tamanio = 0; // Tamaño de la lista
 
-    // Método para insertar un nuevo elemento al final de la lista
-    public void insertar(T elemento) {
-        // Verifica si el elemento ya existe en la lista
+    // Método nuevo para insertar al inicio de la lista
+    public void insertarAlInicio(T elemento) {
         if (!contiene(elemento)) {
-            Nodo<T> nuevoNodo = new Nodo<>(elemento); // Crea un nuevo nodo
+            Nodo<T> nuevoNodo = new Nodo<>(elemento);
+            nuevoNodo.setSiguiente(cabeza);
+            cabeza = nuevoNodo;
+            tamanio++;
+        } else {
+            System.out.println("El elemento ya está en la lista. No se añadirá.");
+        }
+    }
+
+    // Método modificado para insertar después de un elemento
+    public void insertarDespuesDe(T elementoExistente, T nuevoElemento) {
+        if (!contiene(nuevoElemento)) {
+            Nodo<T> actual = cabeza;
+            // Busca el nodo con el elemento existente
+            while (actual != null) {
+                if (actual.getDato() == elementoExistente) { // Comparación por referencia
+                    Nodo<T> nuevoNodo = new Nodo<>(nuevoElemento);
+                    nuevoNodo.setSiguiente(actual.getSiguiente());
+                    actual.setSiguiente(nuevoNodo);
+                    tamanio++;
+                    return;
+                }
+                actual = actual.getSiguiente();
+            }
+            System.out.println("El elemento existente no se encuentra en la lista.");
+        } else {
+            System.out.println("El elemento ya está en la lista. No se añadirá.");
+        }
+    }
+
+    // Método modificado para insertar al final
+    public void insertar(T elemento) {
+        if (!contiene(elemento)) {
+            Nodo<T> nuevoNodo = new Nodo<>(elemento);
             if (cabeza == null) {
-                cabeza = nuevoNodo; // Si la lista está vacía, el nuevo nodo es la cabeza
+                cabeza = nuevoNodo;
             } else {
                 Nodo<T> actual = cabeza;
-                // Recorre la lista hasta llegar al final
                 while (actual.getSiguiente() != null) {
                     actual = actual.getSiguiente();
                 }
-                // Inserta el nuevo nodo al final
                 actual.setSiguiente(nuevoNodo);
             }
-            tamanio++; // Aumenta el tamaño de la lista
+            tamanio++;
         } else {
-            System.out.println("El elemento " + elemento + " ya está en la lista. No se añadirá.");
+            System.out.println("El elemento ya está en la lista. No se añadirá.");
         }
     }
 
-    // Método para insertar un nuevo elemento después de un elemento existente
-    public void insertarDespuesDe(T elementoExistente, T nuevoElemento) {
-        // Verifica si el nuevo elemento ya está en la lista
-        if (!contiene(nuevoElemento)) {
-            Nodo<T> actual = cabeza;
-            // Busca el nodo con el valor del elemento existente
-            while (actual != null && !actual.getDato().equals(elementoExistente)) {
-                actual = actual.getSiguiente();
-            }
-            // Si el elemento existe, inserta el nuevo nodo después de él
-            if (actual != null) {
-                Nodo<T> nuevoNodo = new Nodo<>(nuevoElemento);
-                nuevoNodo.setSiguiente(actual.getSiguiente());
-                actual.setSiguiente(nuevoNodo);
-                tamanio++; // Aumenta el tamaño de la lista
-            } else {
-                System.out.println("El elemento existente no se encuentra en la lista.");
-            }
-        } else {
-            System.out.println("El elemento " + nuevoElemento + " ya está en la lista. No se añadirá.");
-        }
-    }
-
-    // Método para verificar si un elemento existe en la lista
+    // Método modificado para verificar si contiene un elemento
     public boolean contiene(T elemento) {
         Nodo<T> actual = cabeza;
-        // Recorre la lista buscando el elemento
         while (actual != null) {
-            if (actual.getDato().equals(elemento)) {
-                return true; // El elemento existe
+            if (actual.getDato() == elemento) { // Comparación por referencia
+                return true;
             }
             actual = actual.getSiguiente();
         }
-        return false; // El elemento no existe
+        return false;
     }
 
-    // Getter para obtener la cabeza de la lista
-    public Nodo<T> getCabeza() {
-        return cabeza;
-    }
 
-    // Setter para establecer la cabeza de la lista
-    public void setCabeza(Nodo<T> cabeza) {
-        this.cabeza = cabeza;
-    }
-
-    // Getter para obtener el tamaño de la lista
     public int getTamanio() {
         return tamanio;
     }
@@ -159,4 +155,16 @@ public class ListaEnlazada<T> {
         tamanio--; // Disminuye el tamaño de la lista
     }
 
+    // Getter para obtener la cabeza de la lista
+    public Nodo<T> getCabeza() {
+        return cabeza;
+    }
+
+    public void setCabeza(Nodo<T> cabeza) {
+        this.cabeza = cabeza;
+    }
+
+    public void setTamanio(int tamanio) {
+        this.tamanio = tamanio;
+    }
 }

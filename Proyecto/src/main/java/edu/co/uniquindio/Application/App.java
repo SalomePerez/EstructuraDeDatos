@@ -14,7 +14,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         // Cargar el archivo FXML (login.fxml)
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/edu/co/uniquindio/Application/login.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/edu/co/uniquindio/Application/vista/Principal.fxml"));
 
         // Crear una escena con el contenido cargado desde el archivo FXML
         Scene scene = new Scene(fxmlLoader.load());
