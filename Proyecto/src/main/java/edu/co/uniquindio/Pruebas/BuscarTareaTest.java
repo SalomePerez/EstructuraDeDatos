@@ -38,7 +38,7 @@ public class BuscarTareaTest {
     }
 
     @Test
-    public void testBuscarTareaDesdeInicio() {
+    public void testBuscarTaraDesdeInicio() {
         // Simulamos que buscamos desde el inicio
         Tarea tareaEncontrada = administradorTareas.buscarTareaDesdeActividad(tareas, "nombre e actividad");
 
