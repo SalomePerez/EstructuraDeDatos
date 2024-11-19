@@ -59,11 +59,8 @@
                         <Label styleClass="detail-label" text="Nombre:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                         <Label fx:id="lblNombreProceso" styleClass="detail-value" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-                        <Label styleClass="detail-label" text="Descripción:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                        <Label fx:id="lblDescripcionProceso" styleClass="detail-value" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-
-                        <Label styleClass="detail-label" text="Estado:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                        <Label fx:id="lblEstadoProceso" styleClass="detail-value" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label styleClass="detail-label" text="Tiempo:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                        <Label fx:id="lblTiempoProceso" styleClass="detail-value" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
                         <Label styleClass="detail-label" text="Actividades:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
                         <Label fx:id="lblCantidadActividades" styleClass="detail-value" GridPane.columnIndex="1" GridPane.rowIndex="3" />

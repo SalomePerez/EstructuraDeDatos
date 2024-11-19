@@ -1,5 +1,7 @@
 package edu.co.uniquindio.Controllers;
 
+import edu.co.uniquindio.Model.Auxiliares.Persistencia;
+import edu.co.uniquindio.Model.EstructuraDeDatos.Nodo;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -38,8 +40,7 @@ public class ControladorLogin implements Initializable {
     private Usuario usuarioActual;
 
     public ControladorLogin() {
-        usuarios = new ListaEnlazada<>();
-        cargarUsuarios();
+        usuarios = Persistencia.cargarUsuarios(); // Cargar usuarios desde la persistencia
     }
 
     @Override
@@ -101,20 +102,23 @@ public class ControladorLogin implements Initializable {
     }
 
     private void manejarIngresoUsuario() {
-        String identificacion = textUsuario.getText();
-        String contrasenia = textContrasenia.getText();
+        String correo = textUsuario.getText().trim(); // Usar el correo
+        System.out.println(correo);
+        String contrasenia = textContrasenia.getText().trim();
+        System.out.println(contrasenia);
 
-        if (identificacion.isEmpty() || contrasenia.isEmpty() ||
-                identificacion.equals("Usuario") || contrasenia.equals("Contraseña")) {
+        if (correo.isEmpty() || contrasenia.isEmpty() ||
+                correo.equals("Usuario") || contrasenia.equals("Contraseña")) {
             mostrarAlerta("Error", "Por favor complete todos los campos.", AlertType.ERROR);
             return;
         }
 
-        if (autenticarUsuario(identificacion, contrasenia)) {
+        // Verificar autenticación
+        if (autenticarUsuario(correo, contrasenia)) {
             mostrarAlerta("Éxito", "Bienvenido " + usuarioActual.getNombre(), AlertType.INFORMATION);
-            // Aquí puedes agregar la lógica para abrir la ventana principal de tu aplicación
+            abrirVentanaDashboard();
         } else {
-            mostrarAlerta("Error", "Usuario o contraseña incorrectos.", AlertType.ERROR);
+            mostrarAlerta("Error", "Correo o contraseña incorrectos.", AlertType.ERROR);
         }
     }
 
@@ -129,6 +133,21 @@ public class ControladorLogin implements Initializable {
     private void abrirVentanaRegistro() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/edu/co/uniquindio/Application/vista/Registro.fxml"));
+            Scene registroScene = new Scene(loader.load());
+
+            // Obtener la ventana (Stage) actual y cambiar la escena
+            Stage stage = (Stage) bntRegistrar.getScene().getWindow();
+            stage.setScene(registroScene);
+            stage.show();
+        } catch (IOException e) {
+            mostrarAlerta("Error", "No se pudo abrir la ventana de registro.", AlertType.ERROR);
+            e.printStackTrace();
+        }
+    }
+
+    private void abrirVentanaDashboard() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/edu/co/uniquindio/Application/vista/Principal.fxml"));
             Scene registroScene = new Scene(loader.load());
 
             // Obtener la ventana (Stage) actual y cambiar la escena
@@ -165,18 +184,6 @@ public class ControladorLogin implements Initializable {
         // Por ejemplo, usando Properties o un archivo de configuración
     }
 
-    private void cargarUsuarios() {
-        try {
-            usuarios = AdministradorArchivos.cargarUsuarios();
-            if (usuarios.getTamanio() == 0) {
-                registrarUsuario("Admin", "1234", "admin@test.com", "admin123");
-            }
-        } catch (Exception e) {
-            System.out.println("Error al cargar usuarios: " + e.getMessage());
-            usuarios = new ListaEnlazada<>();
-            registrarUsuario("Admin", "1234", "admin@test.com", "admin123");
-        }
-    }
 
     private void guardarCambios() {
         try {
@@ -196,24 +203,39 @@ public class ControladorLogin implements Initializable {
     }
 
     private boolean existeUsuario(String identificacion) {
-        for (int i = 0; i < usuarios.getTamanio(); i++) {
-            if (usuarios.getElementoEnPosicion(i).getIdentificacion().equals(identificacion)) {
-                return true;
-            }
-        }
-        return false;
-    }
+        // Asegúrate de que los usuarios ya están cargados
+        ListaEnlazada<Usuario> usuarios = Persistencia.cargarUsuarios();
 
-    public boolean autenticarUsuario(String identificacion, String contrasenia) {
-        for (int i = 0; i < usuarios.getTamanio(); i++) {
-            Usuario usuario = usuarios.getElementoEnPosicion(i);
-            if (usuario.getIdentificacion().equals(identificacion) &&
+        Nodo<Usuario> nodoActual = usuarios.getCabeza(); // Obtener el primer nodo de la lista
+        while (nodoActual != null) { // Mientras haya un nodo
+            if (nodoActual.getDato().getIdentificacion().equals(identificacion)) {
+                return true; // Si encontramos el usuario con la identificacion, retornamos true
+            }
+            nodoActual = nodoActual.getSiguiente(); // Avanzamos al siguiente nodo
+        }
+        return false; // Si no encontramos el usuario, retornamos false
+    }
+    public boolean autenticarUsuario(String correo, String contrasenia) {
+        if (usuarios == null || usuarios.getTamanio() == 0) {
+            System.out.println("Paso");
+            return false; // Si no hay usuarios cargados, no se puede autenticar
+        }
+
+        Nodo<Usuario> nodoActual = usuarios.getCabeza(); // Iniciar desde el primer nodo
+        while (nodoActual != null) {
+            Usuario usuario = nodoActual.getDato();
+            System.out.println(usuario.getCorreo());
+            System.out.println(usuario.getContrasenia());
+            // Verificar el correo y la contraseña
+            if (usuario.getCorreo().equalsIgnoreCase(correo) &&
                     usuario.getContrasenia().equals(contrasenia)) {
                 usuarioActual = usuario;
-                return true;
+                return true; // Autenticación exitosa
             }
+            nodoActual = nodoActual.getSiguiente(); // Avanzar al siguiente nodo
         }
-        return false;
+
+        return false; // Si no se encontró ningún usuario coincidente
     }
 
     public Usuario getUsuarioActual() {

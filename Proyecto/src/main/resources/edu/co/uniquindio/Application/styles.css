@@ -247,3 +247,25 @@
     -fx-background-color: #21B2B4;
     -fx-text-fill: white;
 }
+
+.tree-node-circle {
+    -fx-fill: #4a90e2;  /* Color de fondo del círculo */
+    -fx-stroke: #2c3e50;  /* Color del borde */
+}
+
+.tree-node-text {
+    -fx-font-size: 10px;
+    -fx-fill: white;  /* Color del texto */
+}
+
+.tree-node-circle {
+    -fx-fill: lightblue; /* Color del círculo */
+    -fx-stroke: #2a73ff; /* Borde del círculo */
+    -fx-stroke-width: 2;
+}
+
+.tree-node-text {
+    -fx-font-size: 14px; /* Tamaño del texto */
+    -fx-font-family: "Candara Bold"; /* Fuente */
+    -fx-fill: #333; /* Color del texto */
+}

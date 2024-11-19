@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Usuarios>
+                    
+    
+    
+    
+    <usuario>
+                                        
+        
+        
+        
+        <nombre>usuario</nombre>
+                                        
+        
+        
+        
+        <correo>123</correo>
+                                        
+        
+        
+        
+        <contrasenia>123</contrasenia>
+                                        
+        
+        
+        
+        <identificacion>123</identificacion>
+                                    
+    
+    
+    
+    </usuario>
+                
+    
+    
+    
+    <usuario>
+                                
+        
+        
+        <nombre>Nelson</nombre>
+                                
+        
+        
+        <correo>1234</correo>
+                                
+        
+        
+        <contrasenia>123</contrasenia>
+                                
+        
+        
+        <identificacion>1234</identificacion>
+                            
+    
+    
+    </usuario>
+            
+    
+    
+    <usuario>
+                        
+        
+        <nombre>prueba</nombre>
+                        
+        
+        <correo>pruebaNumero</correo>
+                        
+        
+        <contrasenia>1234</contrasenia>
+                        
+        
+        <identificacion>pruebaNumero</identificacion>
+                    
+    
+    </usuario>
+        
+    
+    <usuario>
+                
+        <nombre>NelsonPrueba</nombre>
+                
+        <correo>preuba</correo>
+                
+        <contrasenia>1234</contrasenia>
+                
+        <identificacion>correoNelson</identificacion>
+            
+    </usuario>
+    
+    <usuario>
+        <nombre>Nelson </nombre>
+        <correo>10031897777</correo>
+        <contrasenia>124</contrasenia>
+        <identificacion>nelson</identificacion>
+    </usuario>
+</Usuarios>

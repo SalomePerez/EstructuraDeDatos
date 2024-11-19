@@ -14,6 +14,7 @@ import edu.co.uniquindio.Model.EstructuraDeDatos.ListaEnlazada;
 import edu.co.uniquindio.Model.Principales.Actividad;
 import edu.co.uniquindio.Model.Principales.Proceso;
 import edu.co.uniquindio.Model.Principales.Tarea;
+import edu.co.uniquindio.Model.Principales.Usuario;
 import org.w3c.dom.*;
 
 public class Persistencia {
@@ -195,5 +196,102 @@ public class Persistencia {
         }
         return (Element) node;
 
+    }
+
+    public static ListaEnlazada<Usuario> cargarUsuarios() {
+        ListaEnlazada<Usuario> usuarios = new ListaEnlazada<>();
+        try {
+            File archivo = new File("src/main/resources/edu/co/uniquindio/Application/files/usuarios.xml"); // Ajusta la ruta si es necesario
+            if (!archivo.exists()) {
+                return usuarios; // Si el archivo no existe, devolver la lista vacía
+            }
+
+            // Crear el parser XML
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse(archivo);
+            doc.getDocumentElement().normalize();
+
+            Element root = doc.getDocumentElement();
+            Element usuarioActual = getFirstChildElement(root);
+
+            // Iterar sobre los elementos <usuario>
+            while (usuarioActual != null) {
+                if (usuarioActual.getTagName().equals("usuario")) {
+                    // Extraer los atributos o elementos de cada usuario
+                    String nombre = usuarioActual.getElementsByTagName("nombre").item(0).getTextContent();
+                    String identificacion = usuarioActual.getElementsByTagName("identificacion").item(0).getTextContent();
+                    String correo = usuarioActual.getElementsByTagName("correo").item(0).getTextContent();
+                    String contrasenia = usuarioActual.getElementsByTagName("contrasenia").item(0).getTextContent();
+
+                    // Crear el objeto Usuario
+                    Usuario nuevoUsuario = new Usuario(nombre, identificacion, correo, contrasenia);
+
+                    // Insertar el usuario en la lista enlazada
+                    usuarios.insertar(nuevoUsuario);
+                }
+
+                // Avanzar al siguiente usuario en el XML
+                usuarioActual = getNextSiblingElement(usuarioActual);
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // Mostrar error si ocurre
+        }
+        return usuarios;
+    }
+
+
+    public static void guardarUsuarioEnXML(Usuario usuario) {
+        try {
+            File archivo = new File("src/main/resources/edu/co/uniquindio/Application/files/usuarios.xml");
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc;
+
+            // Si el archivo existe, cargarlo; de lo contrario, crear uno nuevo
+            if (archivo.exists()) {
+                doc = builder.parse(archivo);
+            } else {
+                doc = builder.newDocument();
+                Element root = doc.createElement("Usuarios");
+                doc.appendChild(root);
+            }
+
+            // Obtener el nodo raíz
+            Element root = doc.getDocumentElement();
+
+            // Crear nodo Usuario
+            Element nodoUsuario = doc.createElement("usuario");
+
+            // Añadir elementos para cada atributo del usuario
+            Element nombreElement = doc.createElement("nombre");
+            nombreElement.setTextContent(usuario.getNombre());
+            nodoUsuario.appendChild(nombreElement);
+
+            Element correoElement = doc.createElement("correo");
+            correoElement.setTextContent(usuario.getCorreo());
+            nodoUsuario.appendChild(correoElement);
+
+            Element contraseniaElement = doc.createElement("contrasenia");
+            contraseniaElement.setTextContent(usuario.getContrasenia());
+            nodoUsuario.appendChild(contraseniaElement);
+
+            Element identificacionElement = doc.createElement("identificacion");
+            identificacionElement.setTextContent(usuario.getIdentificacion()); // Using email as identifier
+            nodoUsuario.appendChild(identificacionElement);
+
+            root.appendChild(nodoUsuario);
+
+            // Guardar el archivo XML
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            DOMSource source = new DOMSource(doc);
+            StreamResult result = new StreamResult(archivo);
+            transformer.transform(source, result);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

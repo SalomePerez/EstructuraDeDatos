@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Usuarios>
+                
+    
+    
+    <Usuario>
+                                
+        
+        
+        <Nombre>Nelson</Nombre>
+                                
+        
+        
+        <Correo>3153267</Correo>
+                                
+        
+        
+        <Contrasenia>1234</Contrasenia>
+                            
+    
+    
+    </Usuario>
+            
+    
+    
+    <Usuario>
+                        
+        
+        <Nombre>Nelson </Nombre>
+                        
+        
+        <Correo>13564</Correo>
+                        
+        
+        <Contrasenia>1234</Contrasenia>
+                    
+    
+    </Usuario>
+        
+    
+    <Usuario>
+                
+        <Nombre>nelson</Nombre>
+                
+        <Correo>324</Correo>
+                
+        <Contrasenia>1234</Contrasenia>
+            
+    </Usuario>
+    
+    <Usuario>
+        <Nombre>Hola</Nombre>
+        <Correo>1122</Correo>
+        <Contrasenia>1234</Contrasenia>
+    </Usuario>
+</Usuarios>

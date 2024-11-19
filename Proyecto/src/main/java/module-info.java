@@ -30,5 +30,4 @@ module edu.co.uniquindio.proyecto {
     requires com.jfoenix;
 
 
-
 }

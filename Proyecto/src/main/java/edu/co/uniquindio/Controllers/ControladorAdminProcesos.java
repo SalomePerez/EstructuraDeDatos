@@ -3,162 +3,79 @@ package edu.co.uniquindio.Controllers;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import edu.co.uniquindio.Model.Administradores.AdministradorProcesos;
+import edu.co.uniquindio.Model.Auxiliares.ActividadResultado;
 import edu.co.uniquindio.Model.Auxiliares.GestorDatosExcel;
 import edu.co.uniquindio.Model.Auxiliares.Persistencia;
 import edu.co.uniquindio.Model.EstructuraDeDatos.Cola;
 import edu.co.uniquindio.Model.EstructuraDeDatos.ListaEnlazada;
+import edu.co.uniquindio.Model.EstructuraDeDatos.Nodo;
 import edu.co.uniquindio.Model.Principales.Actividad;
 import edu.co.uniquindio.Model.Principales.Proceso;
 import edu.co.uniquindio.Model.Principales.Tarea;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 
 public class ControladorAdminProcesos {
-
-    @FXML private JFXTextField txtBusquedaProceso;
-    @FXML private JFXButton btnBuscar;
-    @FXML private JFXButton btnVisualizarArbol;
-    @FXML private MenuItem menuImportarProceso;
-    @FXML private MenuItem menuImportarActividad;
-    @FXML private MenuItem menuImportarTarea;
-    @FXML private MenuItem menuImportarTodo;
-    @FXML private MenuItem menuExportar;
-    @FXML private VBox detalleProceso;
-    @FXML private VBox arbolContainer;
-    @FXML private TreeView<String> treeArbolGenerado;
+    public JFXButton btnVisualizarArbol;
+    public VBox arbolContainer;
     @FXML private Label lblNombreProceso;
-    @FXML private Label lblDescripcionProceso;
-    @FXML private Label lblFechaInicio;
     @FXML private Label lblCantidadActividades;
     @FXML private Label lblCantidadTareas;
+    @FXML private JFXTextField txtBusquedaProceso;
+    @FXML private TreeView<String> treeArbolGenerado;
 
-    private AdministradorProcesos administradorProcesos;
-    private GestorDatosExcel gestorExcel;
+    private ListaEnlazada<Proceso> procesos;
     private Proceso procesoSeleccionado;
 
     @FXML
     public void initialize() {
-        administradorProcesos = new AdministradorProcesos();
-        gestorExcel = new GestorDatosExcel(administradorProcesos);
+        cargarProcesosDesdeXML();
+    }
 
-        // Inicializar el TreeView
-        treeArbolGenerado = new TreeView<>();
-        treeArbolGenerado.setShowRoot(true);
-
-        // Ocultar inicialmente el contenedor del árbol
-        arbolContainer.setVisible(false);
-        arbolContainer.setManaged(false);
-
-        // Cargar procesos iniciales desde XML
-        cargarProcesosIniciales();
+    private void cargarProcesosDesdeXML() {
+        try {
+            procesos = Persistencia.cargarProcesos();
+            if (procesos.estaVacia()) {
+                mostrarAlerta("Aviso", "No se encontraron procesos en el archivo XML");
+            }
+        } catch (Exception e) {
+            mostrarAlerta("Error", "Error al cargar procesos: " + e.getMessage());
+        }
     }
 
     @FXML
     private void buscarProceso() {
         String nombreBuscado = txtBusquedaProceso.getText().trim();
         if (nombreBuscado.isEmpty()) {
-            mostrarAlerta("Error", "Debe ingresar un nombre de proceso para buscar");
+            mostrarAlerta("Error", "Ingrese un nombre de proceso");
             return;
         }
 
         procesoSeleccionado = buscarProcesoPorNombre(nombreBuscado);
         if (procesoSeleccionado != null) {
             actualizarDetallesProceso();
+            generarArbolProceso();
         } else {
-            mostrarAlerta("No encontrado", "No se encontró ningún proceso con ese nombre");
-        }
-    }
-
-    @FXML
-    private void generarArbolArchivo() {
-        if (procesoSeleccionado == null) {
-            mostrarAlerta("Error", "Debe seleccionar un proceso primero");
-            return;
-        }
-
-        // Crear el árbol usando el título del proceso como raíz
-        TreeItem<String> root = new TreeItem<>(procesoSeleccionado.obtenerTitulo());
-        generarArbolProceso(root, procesoSeleccionado);
-
-        // Mostrar el árbol
-        treeArbolGenerado.setRoot(root);
-        root.setExpanded(true);
-
-        // Hacer visible el contenedor del árbol
-        arbolContainer.setVisible(true);
-        arbolContainer.setManaged(true);
-    }
-
-    private void generarArbolProceso(TreeItem<String> nodoRaiz, Proceso proceso) {
-        ListaEnlazada<Actividad> actividades = proceso.obtenerlistaDeActividades();
-
-        for (int i = 0; i < actividades.getTamanio(); i++) {
-            Actividad actividad = actividades.getElementoEnPosicion(i);
-            TreeItem<String> nodoActividad = new TreeItem<>(
-                    String.format("Actividad: %s (%s)",
-                            actividad.obtenerNombre(),
-                            actividad.esObligatoria() ? "Obligatoria" : "Opcional")
-            );
-
-            // Agregar información de conexiones de actividades
-            if (actividad.obtenerActividadAnterior() != null) {
-                nodoActividad.getChildren().add(new TreeItem<>(
-                        "Anterior: " + actividad.obtenerActividadAnterior().obtenerNombre()));
-            }
-            if (actividad.obtenerActividadSiguiente() != null) {
-                nodoActividad.getChildren().add(new TreeItem<>(
-                        "Siguiente: " + actividad.obtenerActividadSiguiente().obtenerNombre()));
-            }
-
-            // Agregar tareas de la actividad
-            Cola<Tarea> tareas = actividad.obtenerTareas();
-            if (!tareas.estaVacia()) {
-                int tareasRestantes = tareas.obtenerTamano();
-                while (tareasRestantes > 0) {
-                    Tarea tarea = tareas.desencolar();
-                    TreeItem<String> nodoTarea = new TreeItem<>(
-                            String.format("Tarea: %s (%d min) (%s) [%s]",
-                                    tarea.obtenerNombre(),
-                                    tarea.obtenerDuracion(),
-                                    tarea.esObligatoria() ? "Obligatoria" : "Opcional",
-                                    tarea.estaCompletada() ? "Completada" : "Pendiente")
-                    );
-                    nodoActividad.getChildren().add(nodoTarea);
-                    tareas.encolar(tarea);
-                    tareasRestantes--;
-                }
-            } else {
-                nodoActividad.getChildren().add(new TreeItem<>("Sin tareas asignadas"));
-            }
-
-            nodoRaiz.getChildren().add(nodoActividad);
-        }
-    }
-
-    private void actualizarDetallesProceso() {
-        if (procesoSeleccionado != null) {
-            lblNombreProceso.setText(procesoSeleccionado.obtenerTitulo());
-            // Usando el método toString() de Proceso para mostrar información detallada
-            lblDescripcionProceso.setText(procesoSeleccionado.toString());
-            lblFechaInicio.setText(procesoSeleccionado.obtenerFechaDeInicio().toString());
-            lblCantidadActividades.setText(
-                    String.valueOf(procesoSeleccionado.obtenerlistaDeActividades().getTamanio())
-            );
-            lblCantidadTareas.setText(
-                    String.valueOf(contarTareasTotales(procesoSeleccionado))
-            );
+            mostrarAlerta("No encontrado", "No se encontró proceso con ese nombre");
         }
     }
 
     private Proceso buscarProcesoPorNombre(String nombre) {
-        ListaEnlazada<Proceso> procesos = administradorProcesos.obtenerTodosLosProcesos();
         for (int i = 0; i < procesos.getTamanio(); i++) {
             Proceso proceso = procesos.getElementoEnPosicion(i);
             if (proceso.obtenerTitulo().equalsIgnoreCase(nombre)) {
@@ -168,49 +85,17 @@ public class ControladorAdminProcesos {
         return null;
     }
 
-    @FXML
-    private void importarProceso() {
-        File archivo = seleccionarArchivo("Importar Proceso", "*.xlsx");
-        if (archivo != null) {
-            try {
-                gestorExcel.importarDatos(archivo.getAbsolutePath());
-                mostrarAlerta("Éxito", "Proceso importado correctamente");
-                cargarProcesosIniciales(); // Recargar la lista de procesos
-            } catch (IOException e) {
-                mostrarAlerta("Error", "Error al importar el proceso: " + e.getMessage());
-            }
-        }
-    }
+    private void actualizarDetallesProceso() {
+        if (procesoSeleccionado == null) return;
 
-    @FXML
-    private void exportarTodo() {
-        if (procesoSeleccionado == null) {
-            mostrarAlerta("Error", "Debe seleccionar un proceso primero");
-            return;
-        }
+        lblNombreProceso.setText(procesoSeleccionado.obtenerTitulo());
 
-        File archivo = seleccionarArchivoGuardar("Exportar Proceso", "*.xlsx");
-        if (archivo != null) {
-            try {
-                gestorExcel.exportarProceso(archivo.getAbsolutePath(),
-                        procesoSeleccionado.obtenerIdentificador());
-                mostrarAlerta("Éxito", "Proceso exportado correctamente");
-            } catch (IOException e) {
-                mostrarAlerta("Error", "Error al exportar el proceso: " + e.getMessage());
-            }
-        }
-    }
+        ListaEnlazada<Actividad> actividades = procesoSeleccionado.obtenerlistaDeActividades();
+        int totalActividades = actividades.getTamanio();
+        int totalTareas = contarTareasTotales(procesoSeleccionado);
 
-    private void cargarProcesosIniciales() {
-        try {
-            ListaEnlazada<Proceso> procesos = Persistencia.cargarProcesos();
-            for (int i = 0; i < procesos.getTamanio(); i++) {
-                Proceso proceso = procesos.getElementoEnPosicion(i);
-                administradorProcesos.registrarNuevoProceso(proceso.obtenerTitulo());
-            }
-        } catch (Exception e) {
-            mostrarAlerta("Error", "Error al cargar los procesos iniciales: " + e.getMessage());
-        }
+        lblCantidadActividades.setText(String.valueOf(totalActividades));
+        lblCantidadTareas.setText(String.valueOf(totalTareas));
     }
 
     private int contarTareasTotales(Proceso proceso) {
@@ -225,22 +110,46 @@ public class ControladorAdminProcesos {
         return totalTareas;
     }
 
-    private File seleccionarArchivo(String titulo, String extension) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle(titulo);
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Excel Files", extension)
-        );
-        return fileChooser.showOpenDialog(new Stage());
+    private void generarArbolProceso() {
+        if (procesoSeleccionado == null) return;
+
+        TreeItem<String> root = new TreeItem<>(procesoSeleccionado.obtenerTitulo());
+        ListaEnlazada<Actividad> actividades = procesoSeleccionado.obtenerlistaDeActividades();
+
+        for (int i = 0; i < actividades.getTamanio(); i++) {
+            Actividad actividad = actividades.getElementoEnPosicion(i);
+            TreeItem<String> nodoActividad = crearNodoActividad(actividad);
+            root.getChildren().add(nodoActividad);
+        }
+
+        treeArbolGenerado.setRoot(root);
+        root.setExpanded(true);
     }
 
-    private File seleccionarArchivoGuardar(String titulo, String extension) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle(titulo);
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Excel Files", extension)
+    private TreeItem<String> crearNodoActividad(Actividad actividad) {
+        TreeItem<String> nodoActividad = new TreeItem<>(
+                String.format("Actividad: %s (%s)",
+                        actividad.obtenerNombre(),
+                        actividad.esObligatoria() ? "Obligatoria" : "Opcional")
         );
-        return fileChooser.showSaveDialog(new Stage());
+
+        // Agregar tareas
+        Cola<Tarea> tareas = actividad.obtenerTareas();
+        if (!tareas.estaVacia()) {
+            Iterator<Tarea> iteradorTareas = tareas.iterator();
+            while (iteradorTareas.hasNext()) {
+                Tarea tarea = iteradorTareas.next();
+                TreeItem<String> nodoTarea = new TreeItem<>(
+                        String.format("Tarea: %s (%d min) (%s)",
+                                tarea.obtenerNombre(),
+                                tarea.obtenerDuracion(),
+                                tarea.esObligatoria() ? "Obligatoria" : "Opcional")
+                );
+                nodoActividad.getChildren().add(nodoTarea);
+            }
+        }
+
+        return nodoActividad;
     }
 
     private void mostrarAlerta(String titulo, String mensaje) {
@@ -259,4 +168,85 @@ public class ControladorAdminProcesos {
 
     public void importarTodo(ActionEvent actionEvent) {
     }
+
+    public void exportarTodo(ActionEvent actionEvent) {
+    }
+
+    public void importarProceso(ActionEvent actionEvent) {
+    }
+
+    @FXML
+    public void generarArbolArchivo(ActionEvent actionEvent) {
+        if (procesoSeleccionado == null) {
+            mostrarAlerta("Error", "Debe seleccionar un proceso primero");
+            return;
+        }
+
+        // Crear el nodo raíz con el título del proceso seleccionado
+        TreeItem<String> root = new TreeItem<>(procesoSeleccionado.obtenerTitulo());
+        ListaEnlazada<Actividad> actividades = procesoSeleccionado.obtenerlistaDeActividades();
+
+        // Recorrer actividades del proceso
+        for (int i = 0; i < actividades.getTamanio(); i++) {
+            Actividad actividad = actividades.getElementoEnPosicion(i);
+            TreeItem<String> nodoActividad = new TreeItem<>(
+                    String.format("Actividad: %s (%s)",
+                            actividad.obtenerNombre(),
+                            actividad.esObligatoria() ? "Obligatoria" : "Opcional")
+            );
+
+            // Recorrer tareas de la actividad
+            Cola<Tarea> tareas = actividad.obtenerTareas();
+            if (!tareas.estaVacia()) {
+                Iterator<Tarea> iteradorTareas = tareas.iterator();
+                while (iteradorTareas.hasNext()) {
+                    Tarea tarea = iteradorTareas.next();
+                    TreeItem<String> nodoTarea = new TreeItem<>(
+                            String.format("Tarea: %s (%d min) (%s) [%s]",
+                                    tarea.obtenerNombre(),
+                                    tarea.obtenerDuracion(),
+                                    tarea.esObligatoria() ? "Obligatoria" : "Opcional",
+                                    tarea.estaCompletada() ? "Completada" : "Pendiente")
+                    );
+                    nodoActividad.getChildren().add(nodoTarea);
+                }
+            }
+
+            root.getChildren().add(nodoActividad);
+        }
+
+        // Configurar estilo personalizado para los nodos del árbol
+        treeArbolGenerado.setCellFactory(treeView -> new TreeCell<String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    // Crear el nodo visual con círculo y texto
+                    Circle circle = new Circle(15);
+                    circle.getStyleClass().add("tree-node-circle");
+
+                    Text text = new Text(item);
+                    text.getStyleClass().add("tree-node-text");
+
+                    StackPane nodeContent = new StackPane(circle, text);
+                    nodeContent.setAlignment(Pos.CENTER);
+                    StackPane.setMargin(text, new Insets(0, 5, 0, 5));
+
+                    setGraphic(nodeContent);
+                }
+            }
+        });
+
+        // Configurar el árbol y mostrar el contenedor
+        treeArbolGenerado.setRoot(root);
+        root.setExpanded(true); // Expandir el nodo raíz
+
+        arbolContainer.setVisible(true);
+        arbolContainer.setManaged(true);
+    }
+
 }
