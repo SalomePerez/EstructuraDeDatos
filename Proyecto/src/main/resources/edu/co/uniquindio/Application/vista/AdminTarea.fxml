@@ -1,46 +1,128 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.*?>
 <?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.collections.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<?import javafx.scene.text.Font?>
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="edu.co.uniquindio.Application.vistas.AdminTarea"
-            prefHeight="624.0" prefWidth="746.0" AnchorPane.topAnchor="0.0"
-            AnchorPane.rightAnchor="0.0"
-            AnchorPane.bottomAnchor="0.0"
-            AnchorPane.leftAnchor="0.0">
+<AnchorPane prefHeight="624.0" prefWidth="746.0" stylesheets="@../styles.css" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.co.uniquindio.Controllers.ControladorAdminTareas">
+    <ScrollPane fitToWidth="true" styleClass="panel_scroll_informacion" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <VBox spacing="20" styleClass="main-container">
+            <!-- Cabecera -->
+            <VBox styleClass="header-container">
+                <Label styleClass="view-title" text="Administrador de Tareas">
+                    <font>
+                        <Font name="Candara Bold" size="30.0" />
+                    </font>
+                </Label>
+                <Label styleClass="view-subtitle" text="Buscar y gestionar tareas del sistema">
+                    <font>
+                        <Font name="Candara" size="13.0" />
+                    </font>
+                </Label>
+            </VBox>
 
-    <!-- VBox principal que se adaptará al espacio disponible -->
-    <VBox spacing="10" AnchorPane.topAnchor="0.0"
-          AnchorPane.rightAnchor="0.0"
-          AnchorPane.bottomAnchor="0.0"
-          AnchorPane.leftAnchor="0.0">
+            <!-- Sección de Búsqueda -->
+            <VBox spacing="15" styleClass="section-container">
+                <Label styleClass="section-title" text="Búsqueda de Tarea">
+                    <font>
+                        <Font name="Candara Bold" size="20.0" />
+                    </font>
+                </Label>
 
-        <!-- Cabecera de la vista -->
-        <VBox spacing="5" styleClass="header-container">
-            <Label text="Crear Proceso" styleClass="view-title">
-                <font>
-                    <Font name="Candara Bold" size="30.0" />
-                </font>
-            </Label>
-            <Label text="Aquí puedes crear nuevos procesos para tu sistema" styleClass="view-subtitle">
-                <font>
-                    <Font name="Candara" size="13.0" />
-                </font>
-            </Label>
+                <!-- Opciones de Búsqueda -->
+                <VBox spacing="10">
+                    <Label styleClass="form-label" text="Tipo de Búsqueda:">
+                        <font>
+                            <Font name="Candara" size="14.0" />
+                        </font>
+                    </Label>
+                    <JFXComboBox fx:id="comboBusqueda" maxWidth="Infinity" promptText="Seleccione el tipo de búsqueda" styleClass="form-field">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="Desde inicio del proceso" />
+                                <String fx:value="Desde actividad actual" />
+                                <String fx:value="Desde actividad específica" />
+                            </FXCollections>
+                        </items>
+                    </JFXComboBox>
+
+                    <!-- Campo para nombre de actividad (visible solo cuando se selecciona "Desde actividad específica") -->
+                    <HBox fx:id="busquedaActividadBox" spacing="10" visible="false">
+                        <JFXTextField fx:id="txtBusquedaActividad" promptText="Nombre de la actividad" styleClass="form-field" HBox.hgrow="ALWAYS" />
+                    </HBox>
+
+                    <!-- Campo de búsqueda de tarea -->
+                    <HBox spacing="10">
+                        <JFXTextField fx:id="txtBusquedaTarea" promptText="Nombre de la tarea" styleClass="form-field" HBox.hgrow="ALWAYS" />
+                        <JFXButton fx:id="btnBuscar" onAction="#buscarTarea" styleClass="search-button" text="Buscar" />
+                    </HBox>
+                </VBox>
+            </VBox>
+
+            <!-- Sección de Resultados -->
+            <VBox spacing="15" styleClass="section-container">
+                <Label styleClass="section-title" text="Resultados de la búsqueda">
+                    <font>
+                        <Font name="Candara Bold" size="18.0" />
+                    </font>
+                </Label>
+
+                <VBox fx:id="resultadosContainer" spacing="20">
+                    <!-- Tabla de Tareas Encontradas -->
+                    <TableView fx:id="tablaTareas" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colProceso" text="Proceso" />
+                            <TableColumn fx:id="colActividad" text="Actividad" />
+                            <TableColumn fx:id="colNombreTarea" text="Nombre Tarea" />
+                            <TableColumn fx:id="colDescripcion" text="Descripción" />
+                            <TableColumn fx:id="colDuracion" text="Duración" />
+                            <TableColumn fx:id="colObligatoria" text="Obligatoria" />
+                        </columns>
+                    </TableView>
+
+                    <!-- Detalles de la Tarea -->
+                    <VBox fx:id="detalleTarea" spacing="10" visible="false">
+                        <Label styleClass="subsection-title" text="Detalle de la Tarea">
+                            <font>
+                                <Font name="Candara Bold" size="16.0" />
+                            </font>
+                        </Label>
+
+                        <!-- Información de la Tarea -->
+                        <GridPane hgap="10" vgap="5">
+                            <Label styleClass="detail-label" text="Nombre:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                            <Label fx:id="lblNombreTarea" styleClass="detail-value" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                            <Label styleClass="detail-label" text="Descripción:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                            <Label fx:id="lblDescripcionTarea" styleClass="detail-value" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                            <Label styleClass="detail-label" text="Actividad:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                            <Label fx:id="lblActividad" styleClass="detail-value" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                            <Label styleClass="detail-label" text="Duración:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                            <Label fx:id="lblDuracion" styleClass="detail-value" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                            <Label styleClass="detail-label" text="Estado:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                            <Label fx:id="lblEstadoTarea" styleClass="detail-value" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                            <columnConstraints>
+                                <ColumnConstraints />
+                                <ColumnConstraints />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints />
+                                <RowConstraints />
+                                <RowConstraints />
+                                <RowConstraints />
+                                <RowConstraints />
+                            </rowConstraints>
+                        </GridPane>
+                    </VBox>
+                </VBox>
+            </VBox>
         </VBox>
-
-        <!-- Contenido principal que se adaptará al espacio restante -->
-        <VBox VBox.vgrow="ALWAYS" styleClass="content-container"
-              spacing="15" style="-fx-padding: 20;">
-            <!-- Aquí va el contenido específico de cada vista -->
-        </VBox>
-
-    </VBox>
+    </ScrollPane>
 
 </AnchorPane>

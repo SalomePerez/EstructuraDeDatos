@@ -91,7 +91,7 @@ public class ControladorDashboard {
                     fxmlFile = "CrearProceso.fxml";
                     break;
                 case "btn_admin_procesos":
-                    fxmlFile = "AdminProcesos.fxml";
+                    fxmlFile = "AdminProceso.fxml";
                     break;
                 case "btn_admin_actividad":
                     fxmlFile = "AdminActividad.fxml";

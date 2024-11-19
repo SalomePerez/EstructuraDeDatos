@@ -182,3 +182,68 @@
 .section-title {
     -fx-text-fill: #2c3e50;
 }
+
+/* Estilos actualizados para la barra de acciones */
+.action-bar {
+    -fx-background-color: #023a3b;
+    -fx-padding: 10 20 10 20;
+    -fx-border-width: 0 0 2 0;
+    -fx-border-color: #21B2B4;
+}
+
+/* Actualizar los estilos de los botones para que sean consistentes */
+.action-button {
+    -fx-background-color: #023a3b;
+    -fx-text-fill: white;
+    -fx-border-width: 2px;
+    -fx-border-radius: 50px;
+    -fx-background-radius: 50px;
+    -fx-border-style: solid;
+    -fx-border-color: #023a3b;
+    -fx-transition-duration: 0.2s;
+    -fx-padding: 10 20;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-min-width: 120px;
+    -fx-min-height: 35px;
+}
+
+.action-button:hover {
+    -fx-background-color: #21B2B4;
+    -fx-border-color: #21B2B4;
+    -fx-effect: dropshadow(three-pass-box, rgba(33,178,180,0.5), 10, 0, 0, 0);
+}
+
+.action-button:pressed {
+    -fx-background-color: #141313;
+    -fx-border-color: #141313;
+}
+
+/* Estilos para el contenedor del árbol */
+.arbolContainer {
+    -fx-padding: 15;
+    -fx-background-color: white;
+    -fx-background-radius: 5;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+    -fx-margin-top: 20;
+}
+
+/* Estilo para el TreeView */
+.tree-view {
+    -fx-background-color: transparent;
+    -fx-border-color: #21B2B4;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+    -fx-padding: 10;
+}
+
+.tree-view .tree-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #2c3e50;
+    -fx-padding: 5 10;
+}
+
+.tree-view .tree-cell:selected {
+    -fx-background-color: #21B2B4;
+    -fx-text-fill: white;
+}

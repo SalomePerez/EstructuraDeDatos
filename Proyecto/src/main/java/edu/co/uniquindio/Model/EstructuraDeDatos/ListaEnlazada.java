@@ -1,11 +1,14 @@
 package edu.co.uniquindio.Model.EstructuraDeDatos;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 /**
  * Clase que implementa una lista enlazada simple.
  *
  * @param <T> El tipo de dato almacenado en la lista.
  */
-public class ListaEnlazada<T> {
+public class ListaEnlazada<T> implements Iterable<T> {
     private Nodo<T> cabeza; // Nodo inicial de la lista
     private int tamanio = 0; // Tamaño de la lista
 
@@ -166,5 +169,32 @@ public class ListaEnlazada<T> {
 
     public void setTamanio(int tamanio) {
         this.tamanio = tamanio;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new IteradorLista();
+    }
+
+    /**
+     * Clase interna que implementa el iterador para la lista enlazada.
+     */
+    private class IteradorLista implements Iterator<T> {
+        private Nodo<T> actual = cabeza;
+
+        @Override
+        public boolean hasNext() {
+            return actual != null;
+        }
+
+        @Override
+        public T next() {
+            if (actual == null) {
+                throw new NoSuchElementException("No hay más elementos en la lista.");
+            }
+            T dato = actual.getDato();
+            actual = actual.getSiguiente();
+            return dato;
+        }
     }
 }

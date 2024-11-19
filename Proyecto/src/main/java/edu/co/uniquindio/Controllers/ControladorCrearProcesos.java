@@ -2,6 +2,7 @@ package edu.co.uniquindio.Controllers;
 
 import com.jfoenix.controls.*;
 import com.jfoenix.validation.RequiredFieldValidator;
+import edu.co.uniquindio.Model.Auxiliares.Persistencia;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -281,8 +282,8 @@ public class ControladorCrearProcesos implements Initializable {
             return;
         }
 
-        // Aquí podrías agregar la lógica para persistir el proceso
-        // Por ejemplo, guardarlo en una base de datos o en un archivo
+        // Guardar el proceso en XML
+        Persistencia.guardarProceso(procesoActual);
 
         System.out.println(procesoActual.toString());
 

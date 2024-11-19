@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Procesos>
+    <Proceso nombre="Ejemplo">
+        <Actividad nombre="actividad ejemolo" obligatoria="false">
+            <Descripcion>hola</Descripcion>
+            <Tareas>
+                <Tarea estado="Pendiente" nombre="hola" obligatoria="false">
+                    <Descripcion>hola</Descripcion>
+                    <Duracion>2</Duracion>
+                </Tarea>
+                <Tarea estado="Pendiente" nombre="hola 2 " obligatoria="false">
+                    <Descripcion>hola 2 </Descripcion>
+                    <Duracion>3</Duracion>
+                </Tarea>
+            </Tareas>
+        </Actividad>
+    </Proceso>
+</Procesos>

@@ -1,46 +1,104 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import com.jfoenix.controls.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<?import javafx.scene.text.Font?>
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="edu.co.uniquindio.Application.vistas.AdminProceso"
-            prefHeight="624.0" prefWidth="746.0" AnchorPane.topAnchor="0.0"
-            AnchorPane.rightAnchor="0.0"
-            AnchorPane.bottomAnchor="0.0"
-            AnchorPane.leftAnchor="0.0">
-
-    <!-- VBox principal que se adaptará al espacio disponible -->
-    <VBox spacing="10" AnchorPane.topAnchor="0.0"
-          AnchorPane.rightAnchor="0.0"
-          AnchorPane.bottomAnchor="0.0"
-          AnchorPane.leftAnchor="0.0">
-
-        <!-- Cabecera de la vista -->
-        <VBox spacing="5" styleClass="header-container">
-            <Label text="Crear Proceso" styleClass="view-title">
+<AnchorPane stylesheets="@../styles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.co.uniquindio.Controllers.ControladorAdminProcesos">
+    <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <!-- Header -->
+        <HBox alignment="CENTER_LEFT" spacing="20" styleClass="header">
+            <!-- Título -->
+            <Label styleClass="view-title" text="Administrador de Procesos">
                 <font>
-                    <Font name="Candara Bold" size="30.0" />
+                    <Font name="Candara Bold" size="24.0" />
                 </font>
             </Label>
-            <Label text="Aquí puedes crear nuevos procesos para tu sistema" styleClass="view-subtitle">
-                <font>
-                    <Font name="Candara" size="13.0" />
-                </font>
-            </Label>
-        </VBox>
 
-        <!-- Contenido principal que se adaptará al espacio restante -->
-        <VBox VBox.vgrow="ALWAYS" styleClass="content-container"
-              spacing="15" style="-fx-padding: 20;">
-            <!-- Aquí va el contenido específico de cada vista -->
-        </VBox>
+            <Region HBox.hgrow="ALWAYS" />
 
+            <!-- Búsqueda movida a la derecha -->
+            <HBox alignment="CENTER_RIGHT" spacing="10" styleClass="search-container">
+                <JFXTextField fx:id="txtBusquedaProceso" promptText="Buscar proceso..." styleClass="form-field" />
+                <JFXButton fx:id="btnBuscar" onAction="#buscarProceso" styleClass="action-button" text="Buscar" />
+            </HBox>
+        </HBox>
+
+        <!-- Barra de Acciones como MenuBar -->
+        <MenuBar styleClass="custom-menu-bar">
+            <Menu text="Importar">
+                <items>
+                    <MenuItem fx:id="menuImportarProceso" onAction="#importarProceso" text="Proceso" />
+                    <MenuItem fx:id="menuImportarActividad" onAction="#importarActividad" text="Actividad" />
+                    <MenuItem fx:id="menuImportarTarea" onAction="#importarTarea" text="Tarea" />
+                    <SeparatorMenuItem />
+                    <MenuItem fx:id="menuImportarTodo" onAction="#importarTodo" text="Todo" />
+                </items>
+            </Menu>
+            <Menu text="Exportar">
+                <items>
+                    <MenuItem fx:id="menuExportar" onAction="#exportarTodo" text="Exportar Todo" />
+                </items>
+            </Menu>
+        </MenuBar>
+
+        <!-- Contenido Principal -->
+        <ScrollPane fitToWidth="true" styleClass="panel_scroll_informacion" VBox.vgrow="ALWAYS">
+            <VBox spacing="20" styleClass="main-container">
+                <!-- Sección de Detalles del Proceso -->
+                <VBox fx:id="detalleProceso" spacing="15" styleClass="section-container">
+                    <Label styleClass="section-title" text="Detalles del Proceso">
+                        <font>
+                            <Font name="Candara Bold" size="20.0" />
+                        </font>
+                    </Label>
+
+                    <!-- Información del Proceso -->
+                    <GridPane hgap="10" styleClass="details-grid" vgap="5">
+                        <Label styleClass="detail-label" text="Nombre:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                        <Label fx:id="lblNombreProceso" styleClass="detail-value" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                        <Label styleClass="detail-label" text="Descripción:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <Label fx:id="lblDescripcionProceso" styleClass="detail-value" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                        <Label styleClass="detail-label" text="Estado:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                        <Label fx:id="lblEstadoProceso" styleClass="detail-value" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                        <Label styleClass="detail-label" text="Actividades:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                        <Label fx:id="lblCantidadActividades" styleClass="detail-value" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                        <Label styleClass="detail-label" text="Tareas Totales:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                        <Label fx:id="lblCantidadTareas" styleClass="detail-value" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <columnConstraints>
+                            <ColumnConstraints />
+                            <ColumnConstraints />
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                        </rowConstraints>
+                    </GridPane>
+
+                    <!-- Botón de Visualización -->
+                    <HBox alignment="CENTER" spacing="10">
+                        <JFXButton fx:id="btnVisualizarArbol" onAction="#generarArbolArchivo" styleClass="action-button" text="Visualizar Árbol" />
+                    </HBox>
+                </VBox>
+
+                <!-- Árbol Generado -->
+                <VBox fx:id="arbolContainer" managed="false" spacing="15" styleClass="section-container" visible="false">
+                    <Label styleClass="section-title" text="Árbol de Procesos">
+                        <font>
+                            <Font name="Candara Bold" size="20.0" />
+                        </font>
+                    </Label>
+                    <TreeView fx:id="treeArbolGenerado" VBox.vgrow="ALWAYS" />
+                </VBox>
+            </VBox>
+        </ScrollPane>
     </VBox>
-
 </AnchorPane>
